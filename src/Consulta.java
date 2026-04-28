@@ -1,4 +1,4 @@
-public class Consulta {
+public class Consulta extends Animal {
 	private Data data;
 	private Hora hora;
 	private Animal animal;
