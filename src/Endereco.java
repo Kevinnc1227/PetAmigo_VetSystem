@@ -11,6 +11,13 @@ public class Endereco {
 		this.cidade = "";
 	}
 	
+	public Endereco(String logadouro, String numero, String bairro, String cidade) {
+		this.logadouro = logadouro;
+		this.numero = numero;
+		this.bairro = bairro;
+		this.cidade = cidade;
+	}
+	
 	public String getLogadouro() {
 		return this.logadouro;
 	}

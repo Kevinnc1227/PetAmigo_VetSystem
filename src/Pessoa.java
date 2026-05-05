@@ -10,6 +10,13 @@ public abstract class Pessoa {
 		this.endereco = null;
 		this.telefone = null;
 	}
+	
+	public Pessoa(String nome, String email) {
+		this.nome = nome;
+		this.email = email;
+		this.endereco = null;
+		this.telefone = null;
+	}
 
 	public String getNome() {
 		return nome;

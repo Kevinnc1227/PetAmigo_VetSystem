@@ -9,6 +9,12 @@ public class Cliente extends Pessoa {
 		this.cpf = "";
 		this.pets = new ArrayList<Animal>();
 	}
+	
+	public Cliente(String cpf) {
+		super();
+		this.cpf = cpf;
+		this.pets = new ArrayList<Animal>();
+	}
 
 	public String getCpf() {
 		return cpf;

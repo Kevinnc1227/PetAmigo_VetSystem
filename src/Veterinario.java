@@ -7,6 +7,12 @@ public class Veterinario extends Pessoa {
 		this.crmv = "";
 		this.especialidade = "";
 	}
+	
+	public Veterinario(String crmv, String especialidade) {
+		super();
+		this.crmv = crmv;
+		this.especialidade = especialidade;
+	}
 
 	public String getCrmv() {
 		return this.crmv;
