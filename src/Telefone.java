@@ -7,6 +7,11 @@ public class Telefone {
 		this.numero = "";
 	}
 	
+	public Telefone(String ddd, String numero) {
+		this.ddd = ddd;
+		this.numero = numero;
+	}
+	
 	public String getDdd() {
 		return this.ddd;
 	}
