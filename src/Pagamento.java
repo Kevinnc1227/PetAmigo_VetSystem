@@ -1,4 +1,4 @@
-public class pagamento {
+public class Pagamento {
 	private float valorTotal;
 	private StatusPagamento status;
 
