@@ -1,3 +1,5 @@
+package model;
+
 public class Consulta extends Animal {
 	private Data data;
 	private Hora hora;

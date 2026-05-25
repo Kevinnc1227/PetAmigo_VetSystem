@@ -1,3 +1,4 @@
+package model;
 public class Data {
 	private int dia;
 	private int mes;
