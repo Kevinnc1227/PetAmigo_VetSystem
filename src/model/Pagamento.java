@@ -1,3 +1,5 @@
+package model;
+
 public class Pagamento {
 	private float valorTotal;
 	private StatusPagamento status;

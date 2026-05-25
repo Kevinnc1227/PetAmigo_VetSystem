@@ -1,3 +1,4 @@
+package model;
 public class Veterinario extends Pessoa {
 	private String crmv;
 	private String especialidade;
