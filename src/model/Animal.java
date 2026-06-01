@@ -14,6 +14,12 @@ public class Animal {
         this.setPeso(peso);
         this.prontuario = new Prontuario();
     }
+    public Animal(String nome, TipoAnimal especie, float peso) {
+        this.setNome(nome);
+        this.setEspecie(especie);
+        this.setPeso(peso);
+        this.prontuario = new Prontuario();
+    }
 
 	public int getId() {
 		return this.id;
