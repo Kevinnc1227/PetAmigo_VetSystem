@@ -4,16 +4,17 @@ public class Prontuario {
 	private String historico;
 	private String ultimaVacina;
 	private String observacoes;
-	
+
 	public Prontuario() {
-	    this.historico = "";
-	    this.ultimaVacina = "";
-	    this.observacoes = "";
+		this.historico = "";
+		this.ultimaVacina = "";
+		this.observacoes = "";
 	}
+
 	public Prontuario(String historico, String ultimaVacina, String observacoes) {
-	    this.historico = historico;
-	    this.ultimaVacina = ultimaVacina;
-	    this.observacoes = observacoes;
+		this.historico = historico;
+		this.ultimaVacina = ultimaVacina;
+		this.observacoes = observacoes;
 	}
 
 	public String getHistorico() {
@@ -39,11 +40,10 @@ public class Prontuario {
 	public void setObservacoes(String observacoes) {
 		this.observacoes = observacoes;
 	}
+
 	@Override
 	public String toString() {
-	    return "Prontuario:\n" +
-	           "Historico = " + historico + "\n" +
-	           "UltimaVacina = " + ultimaVacina + "\n" +
-	           "Observacoes = " + observacoes;
+		return "Prontuario:\n" + "Historico = " + historico + "\n" + "UltimaVacina = " + ultimaVacina + "\n"
+				+ "Observacoes = " + observacoes;
 	}
 }

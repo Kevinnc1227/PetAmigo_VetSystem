@@ -5,14 +5,14 @@ public abstract class Pessoa {
 	private String email;
 	private Endereco endereco;
 	private Telefone telefone;
-	
+
 	public Pessoa() {
 		this.nome = "";
 		this.email = "";
 		this.endereco = null;
 		this.telefone = null;
 	}
-	
+
 	public Pessoa(String nome, String email) {
 		this.nome = nome;
 		this.email = email;
