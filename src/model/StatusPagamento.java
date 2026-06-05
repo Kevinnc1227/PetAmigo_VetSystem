@@ -1,7 +1,5 @@
 package model;
 
 public enum StatusPagamento {
-	Pendente,
-	Pago,
-	Cancelado
+	Pendente, Pago, Cancelado
 }

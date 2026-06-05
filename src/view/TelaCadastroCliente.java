@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -47,48 +48,56 @@ public class TelaCadastroCliente extends JFrame {
 	 * Cria e configura o Frame (Construtor).
 	 */
 	public TelaCadastroCliente() {
-		setTitle("Cadastro de Clientes - PetAmigo");
+		setTitle("PetAmigo - Cadastro de Clientes");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Evita fechar o programa inteiro ao fechar só a tela
-		setBounds(100, 100, 450, 300);
-
+		setBounds(100, 100, 450, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		JLabel lblTitulo = new JLabel("Cadastro de Clientes");
+		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblTitulo.setBounds(110, 11, 220, 25);
+		contentPane.add(lblTitulo);
+
 		// Campo Nome
-		JLabel lblNome = new JLabel("Nome:");
-		lblNome.setBounds(10, 10, 44, 12);
+		JLabel lblNome = new JLabel("Nome Completo:");
+		lblNome.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNome.setBounds(30, 60, 150, 20);
 		contentPane.add(lblNome);
 
 		txtNome = new JTextField();
-		txtNome.setBounds(64, 7, 250, 20);
+		txtNome.setBounds(180, 60, 200, 22);
 		contentPane.add(txtNome);
 		txtNome.setColumns(10);
 
 		// Campo CPF
 		JLabel lblCpf = new JLabel("CPF:");
-		lblCpf.setBounds(10, 50, 44, 12);
+		lblCpf.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblCpf.setBounds(30, 100, 150, 20);
 		contentPane.add(lblCpf);
 
 		txtCpf = new JTextField();
-		txtCpf.setBounds(64, 47, 150, 20);
+		txtCpf.setBounds(180, 100, 200, 22);
 		contentPane.add(txtCpf);
 		txtCpf.setColumns(10);
 
 		// Campo Email
 		JLabel lblEmail = new JLabel("Email:");
-		lblEmail.setBounds(10, 98, 44, 12);
+		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblEmail.setBounds(30, 140, 150, 20);
 		contentPane.add(lblEmail);
 
 		txtEmail = new JTextField();
-		txtEmail.setBounds(64, 95, 250, 20);
+		txtEmail.setBounds(180, 140, 200, 22);
 		contentPane.add(txtEmail);
 		txtEmail.setColumns(10);
 
 		// Botão Salvar (Com os Eventos Conectados)
 		btnSalvar = new JButton("Salvar");
-		btnSalvar.setBounds(64, 142, 100, 25);
+		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnSalvar.setBounds(150, 240, 120, 30);
 		contentPane.add(btnSalvar);
 
 		btnSalvar.addActionListener(new ActionListener() {

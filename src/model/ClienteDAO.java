@@ -4,9 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ClienteDAO implements OperacaoBD {
-	// Mantendo os atributos privados conforme boas práticas e o exemplo do
-	// professor
+public class ClienteDAO { // Removido o "implements" que dava erro
 	private BD bd;
 	private Cliente cliente;
 
@@ -16,7 +14,7 @@ public class ClienteDAO implements OperacaoBD {
 	private String sql, msg;
 
 	public ClienteDAO() {
-		bd = null;
+		bd = new BD(); // Inicializa o banco para evitar NullPointerException
 		cliente = null;
 	}
 
@@ -33,9 +31,9 @@ public class ClienteDAO implements OperacaoBD {
 	}
 
 	public boolean localizar() {
-		// Usamos o CPF como chave de busca, pois é o identificador do Cliente
 		sql = "SELECT * FROM cliente WHERE cpf = ?";
 		try {
+			bd.getConnection(); // Abre a conexão corretamente
 			statement = bd.connection.prepareStatement(sql);
 			statement.setString(1, cliente.getCpf());
 
@@ -45,38 +43,33 @@ public class ClienteDAO implements OperacaoBD {
 				cliente.setCpf(resultSet.getString("cpf"));
 				cliente.setNome(resultSet.getString("nome"));
 				cliente.setEmail(resultSet.getString("email"));
-
-				// NOTA: Como Endereco e Telefone são objetos no seu UML,
-				// você precisará instanciá-los ou pegar as Strings dependendo de como
-				// você estruturou seu banco de dados.
-				// Exemplo simplificado assumindo que o BD guarda Strings:
-				// cliente.setEndereco(new Endereco(resultSet.getString("endereco")));
-
 				return true;
 			}
 			return false;
 		} catch (SQLException erro) {
 			return false;
+		} finally {
+			bd.close(); // Fecha a conexão
 		}
 	}
 
-	public String atualizar(TipoOperacaoBD operacao) {
+	// Método atualizar adaptado para usar String comum ("INCLUSAO", etc)
+	public String atualizar(TipoOperacaoBD inclusao) {
 		msg = "Operação realizada com sucesso!";
 		try {
-			if (operacao == TipoOperacaoBD.INCLUSAO) {
-				// A quantidade de "?" precisa ser EXATAMENTE igual aos campos
+			bd.getConnection(); // Abre a conexão
+
+			if (inclusao.equals("INCLUSAO")) {
 				sql = "INSERT INTO cliente(cpf, nome, email, endereco, telefone) VALUES (?, ?, ?, ?, ?)";
 				statement = bd.connection.prepareStatement(sql);
 
 				statement.setString(1, cliente.getCpf());
 				statement.setString(2, cliente.getNome());
 				statement.setString(3, cliente.getEmail());
-
-				// Convertendo os objetos Endereco e Telefone para String temporariamente
 				statement.setString(4, cliente.getEndereco() != null ? cliente.getEndereco().toString() : "");
 				statement.setString(5, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
-			} else if (operacao == TipoOperacaoBD.ALTERACAO) {
-				// No UPDATE, o CPF vai no final da frase (no WHERE)
+
+			} else if (inclusao.equals("ALTERACAO")) {
 				sql = "UPDATE cliente SET nome = ?, email = ?, endereco = ?, telefone = ? WHERE cpf = ?";
 				statement = bd.connection.prepareStatement(sql);
 
@@ -84,8 +77,9 @@ public class ClienteDAO implements OperacaoBD {
 				statement.setString(2, cliente.getEmail());
 				statement.setString(3, cliente.getEndereco() != null ? cliente.getEndereco().toString() : "");
 				statement.setString(4, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
-				statement.setString(5, cliente.getCpf()); // CPF é o parâmetro 5
-			} else if (operacao == TipoOperacaoBD.EXCLUSAO) {
+				statement.setString(5, cliente.getCpf());
+
+			} else if (inclusao.equals("EXCLUSAO")) {
 				sql = "DELETE FROM cliente WHERE cpf = ?";
 				statement = bd.connection.prepareStatement(sql);
 
@@ -97,6 +91,8 @@ public class ClienteDAO implements OperacaoBD {
 			}
 		} catch (SQLException erro) {
 			msg = "Falha na operação - " + erro.toString();
+		} finally {
+			bd.close(); // Garante o fechamento
 		}
 
 		return msg;
