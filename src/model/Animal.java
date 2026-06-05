@@ -7,16 +7,26 @@ public class Animal {
 	private float peso;
 	private Prontuario prontuario;
 
-	public Animal(int id, String nome, TipoAnimal especie, float peso) {
-		this.setId(id);
-		this.setNome(nome);
-		this.setEspecie(especie);
-		this.setPeso(peso);
-		this.prontuario = new Prontuario();
-	}
+public Animal(int id, String nome, TipoAnimal especie, float peso) {
+        this.setId(id);
+        this.setNome(nome);
+        this.setEspecie(especie);
+        this.setPeso(peso);
+        this.prontuario = new Pruntuario();
+    }
 
-	public Animal(String nome, String especie) {
-	}
+public Animal(String nome, TipoAnimal especie, float peso) {
+        this.setNome(nome);
+        this.setEspecie(especie);
+        this.setPeso(peso);
+        this.prontuario = new Pruntuario();
+    }
+
+public Animal(String nome, String especie) {
+        this.setNome(nome);
+        this.setEspecie(TipoAnimal.valueOf(especie.toUpperCase()));
+        this.prontuario = new Pruntuario();
+    }
 
 	public int getId() {
 		return this.id;
