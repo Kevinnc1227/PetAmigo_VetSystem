@@ -4,11 +4,11 @@ public class Pagamento {
 	private float valorTotal;
 	private StatusPagamento status;
 
-	public pagamento() {
+	public Pagamento() {
 
 	}
 
-	public pagamento(float valorTotal, StatusPagamento status) {
+	public Pagamento(float valorTotal, StatusPagamento status) {
 		this.valorTotal = valorTotal;
 		this.status = status;
 	}
