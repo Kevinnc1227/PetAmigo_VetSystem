@@ -4,8 +4,6 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import com.mysql.cj.xdevapi.PreparableStatement;
-
 public class AnimalDAO {
 	
 	

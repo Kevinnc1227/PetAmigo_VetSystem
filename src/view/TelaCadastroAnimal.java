@@ -1,17 +1,20 @@
 package view;
-import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
+import java.awt.EventQueue;
 import java.awt.Font;
-import javax.swing.JComboBox;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import model.TipoAnimal;
 
 public class TelaCadastroAnimal extends JFrame {
 
@@ -47,29 +50,29 @@ public class TelaCadastroAnimal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		textField = new JTextField();
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textField.setBounds(42, 49, 96, 18);
 		contentPane.add(textField);
 		textField.setColumns(10);
-		
+
 		JLabel lblNome = new JLabel("Nome");
 		lblNome.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNome.setBounds(62, 28, 52, 11);
 		contentPane.add(lblNome);
-		
+
 		JLabel lblPeso = new JLabel("Peso");
 		lblPeso.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblPeso.setBounds(62, 85, 52, 11);
 		contentPane.add(lblPeso);
-		
+
 		textField_1 = new JTextField();
 		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textField_1.setColumns(10);
 		textField_1.setBounds(42, 106, 96, 18);
 		contentPane.add(textField_1);
-		
+
 		JComboBox comboBox = new JComboBox();
 		comboBox.setFont(new Font("Tahoma", Font.BOLD, 10));
 		comboBox.setToolTipText("");
@@ -77,13 +80,12 @@ public class TelaCadastroAnimal extends JFrame {
 		comboBox.setSelectedIndex(-1);
 		comboBox.setBounds(42, 146, 96, 18);
 		contentPane.add(comboBox);
-		
+
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
+
 			}
 		});
 		btnSalvar.setBounds(42, 190, 84, 20);
