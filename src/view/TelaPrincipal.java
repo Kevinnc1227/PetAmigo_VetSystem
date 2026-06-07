@@ -83,9 +83,22 @@ public class TelaPrincipal extends JFrame {
 		});
 		mnConsulta.add(miAgendarConsulta);
 
+		//
+		JMenu mnAtendimento = new JMenu("Atendimento");
+		menuBar.add(mnAtendimento);
+	
+		JMenuItem miProntuario = new JMenuItem("Prontuário");
+		miProntuario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaProntuario telaProntuario = new TelaProntuario();
+				telaProntuario.setVisible(true);
+			}
+		});
+		mnAtendimento.add(miProntuario);
+		
+		//
 		JMenu mnAjuda = new JMenu("Ajuda");
 		menuBar.add(mnAjuda);
-
 		JMenuItem miSobre = new JMenuItem("Sobre");
 		miSobre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -93,6 +106,6 @@ public class TelaPrincipal extends JFrame {
 			}
 		});
 		mnAjuda.add(miSobre);
+		
 	}
-
 }
