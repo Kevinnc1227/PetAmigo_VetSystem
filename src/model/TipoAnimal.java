@@ -1,9 +1,5 @@
 package model;
 
 public enum TipoAnimal {
-	CACHORRO,
-	GATO,
-	AVE,
-	REPTIL,
-	OUTRO
+	CACHORRO, GATO, AVE, REPTIL, OUTRO
 }

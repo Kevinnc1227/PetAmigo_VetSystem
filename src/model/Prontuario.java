@@ -4,16 +4,19 @@ public class Prontuario {
 	private String historico;
 	private String ultimaVacina;
 	private String observacoes;
-	
+	private int idAnimal;
+
 	public Prontuario() {
-	    this.historico = "";
-	    this.ultimaVacina = "";
-	    this.observacoes = "";
+		this.historico = "";
+		this.ultimaVacina = "";
+		this.observacoes = "";
 	}
-	public Prontuario(String historico, String ultimaVacina, String observacoes) {
-	    this.historico = historico;
-	    this.ultimaVacina = ultimaVacina;
-	    this.observacoes = observacoes;
+
+	public Prontuario(String historico, String ultimaVacina, String observacoes , int idAnimal) {
+		this.historico = historico;
+		this.ultimaVacina = ultimaVacina;
+		this.observacoes = observacoes;
+		this.idAnimal = idAnimal;
 	}
 
 	public String getHistorico() {
@@ -39,11 +42,20 @@ public class Prontuario {
 	public void setObservacoes(String observacoes) {
 		this.observacoes = observacoes;
 	}
+
+	public int getIdAnimal() {
+		return idAnimal;
+	}
+
+	public void setIdAnimal(int idAnimal) {
+		this.idAnimal = idAnimal;
+	}
+
 	@Override
 	public String toString() {
-	    return "Prontuario:\n" +
-	           "Historico = " + historico + "\n" +
-	           "UltimaVacina = " + ultimaVacina + "\n" +
-	           "Observacoes = " + observacoes;
+		return "Prontuario [historico=" + historico + ", ultimaVacina=" + ultimaVacina + ", observacoes=" + observacoes
+				+ ", idAnimal=" + idAnimal + "]";
 	}
+	
+	
 }

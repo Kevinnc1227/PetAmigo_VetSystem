@@ -1,8 +1,8 @@
 package model;
-import java.sql.*;
 
-import Cliente;
-import view.OperacaoBD;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class ClienteDAO implements OperacaoBD {
     private BD bd;
@@ -12,10 +12,11 @@ public class ClienteDAO implements OperacaoBD {
     private ResultSet resultSet;
 
     private String sql, msg;
-    
+
+    // Construtor padrão limpo
     public ClienteDAO() {
-        bd = null;
-        cliente = null;
+        this.bd = null;
+        this.cliente = null;
     }
 
     public void setBd(BD bd) {
@@ -31,46 +32,41 @@ public class ClienteDAO implements OperacaoBD {
     }
 
     public boolean localizar() {
-        // Usamos o CPF como chave de busca, pois é o identificador do Cliente
         sql = "SELECT * FROM cliente WHERE cpf = ?";
         try {
+            // Prepara a consulta usando a conexão ativa trazida pela classe BD
             statement = bd.connection.prepareStatement(sql);
-            statement.setString(1, cliente.getCpf()); 
+            statement.setString(1, cliente.getCpf());
 
             resultSet = statement.executeQuery();
-            
+
             if (resultSet.next()) {
                 cliente.setCpf(resultSet.getString("cpf"));
                 cliente.setNome(resultSet.getString("nome"));
                 cliente.setEmail(resultSet.getString("email"));
-                
                 return true;
             }
             return false;
-        }
-        catch (SQLException erro) {
+        } catch (SQLException erro) {
             return false;
         }
     }
 
+    // O método atualizar DEVE receber o TipoOperacaoBD para respeitar o livro e a interface
     public String atualizar(TipoOperacaoBD operacao) {
         msg = "Operação realizada com sucesso!";
         try {
             if (operacao == TipoOperacaoBD.INCLUSAO) {
-                // A quantidade de "?" precisa ser EXATAMENTE igual aos campos
                 sql = "INSERT INTO cliente(cpf, nome, email, endereco, telefone) VALUES (?, ?, ?, ?, ?)";
                 statement = bd.connection.prepareStatement(sql);
 
                 statement.setString(1, cliente.getCpf());
                 statement.setString(2, cliente.getNome());
                 statement.setString(3, cliente.getEmail());
-                
-                // Convertendo os objetos Endereco e Telefone para String temporariamente
                 statement.setString(4, cliente.getEndereco() != null ? cliente.getEndereco().toString() : "");
                 statement.setString(5, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
-            }
-            else if (operacao == TipoOperacaoBD.ALTERACAO) {
-                // No UPDATE, o CPF vai no final da frase (no WHERE)
+
+            } else if (operacao == TipoOperacaoBD.ALTERACAO) {
                 sql = "UPDATE cliente SET nome = ?, email = ?, endereco = ?, telefone = ? WHERE cpf = ?";
                 statement = bd.connection.prepareStatement(sql);
 
@@ -78,9 +74,9 @@ public class ClienteDAO implements OperacaoBD {
                 statement.setString(2, cliente.getEmail());
                 statement.setString(3, cliente.getEndereco() != null ? cliente.getEndereco().toString() : "");
                 statement.setString(4, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
-                statement.setString(5, cliente.getCpf()); // CPF é o parâmetro 5
-            }
-            else if (operacao == TipoOperacaoBD.EXCLUSAO) {
+                statement.setString(5, cliente.getCpf());
+
+            } else if (operacao == TipoOperacaoBD.EXCLUSAO) {
                 sql = "DELETE FROM cliente WHERE cpf = ?";
                 statement = bd.connection.prepareStatement(sql);
 
@@ -90,8 +86,7 @@ public class ClienteDAO implements OperacaoBD {
             if (statement.executeUpdate() == 0) {
                 msg = "Falha na operação! Nenhum registro foi afetado.";
             }
-        }
-        catch (SQLException erro) {
+        } catch (SQLException erro) {
             msg = "Falha na operação - " + erro.toString();
         }
 
