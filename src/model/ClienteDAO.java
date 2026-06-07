@@ -2,9 +2,9 @@ package model;
 import java.sql.*;
 
 import Cliente;
+import view.OperacaoBD;
 
 public class ClienteDAO implements OperacaoBD {
-    // Mantendo os atributos privados conforme boas práticas e o exemplo do professor
     private BD bd;
     private Cliente cliente;
 
@@ -43,12 +43,6 @@ public class ClienteDAO implements OperacaoBD {
                 cliente.setCpf(resultSet.getString("cpf"));
                 cliente.setNome(resultSet.getString("nome"));
                 cliente.setEmail(resultSet.getString("email"));
-                
-                // NOTA: Como Endereco e Telefone são objetos no seu UML, 
-                // você precisará instanciá-los ou pegar as Strings dependendo de como 
-                // você estruturou seu banco de dados.
-                // Exemplo simplificado assumindo que o BD guarda Strings:
-                // cliente.setEndereco(new Endereco(resultSet.getString("endereco")));
                 
                 return true;
             }
