@@ -13,7 +13,6 @@ public class ClienteDAO implements OperacaoBD {
 
     private String sql, msg;
 
-    // Construtor padrão limpo
     public ClienteDAO() {
         this.bd = null;
         this.cliente = null;
@@ -52,7 +51,6 @@ public class ClienteDAO implements OperacaoBD {
         }
     }
 
-    // O método atualizar DEVE receber o TipoOperacaoBD para respeitar o livro e a interface
     public String atualizar(TipoOperacaoBD operacao) {
         msg = "Operação realizada com sucesso!";
         try {
