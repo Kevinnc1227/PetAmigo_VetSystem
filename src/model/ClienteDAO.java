@@ -7,10 +7,8 @@ import java.sql.SQLException;
 public class ClienteDAO implements OperacaoBD {
     private BD bd;
     private Cliente cliente;
-
     private PreparedStatement statement;
     private ResultSet resultSet;
-
     private String sql, msg;
 
     public ClienteDAO() {
@@ -30,10 +28,10 @@ public class ClienteDAO implements OperacaoBD {
         this.cliente = cliente;
     }
 
+    // Método para buscar um cliente no banco de dados usando o CPF como chave.
     public boolean localizar() {
         sql = "SELECT * FROM cliente WHERE cpf = ?";
         try {
-            // Prepara a consulta usando a conexão ativa trazida pela classe BD
             statement = bd.connection.prepareStatement(sql);
             statement.setString(1, cliente.getCpf());
 
@@ -51,9 +49,12 @@ public class ClienteDAO implements OperacaoBD {
         }
     }
 
+    // Método principal que decide se vai salvar, alterar ou apagar os dados no banco.
     public String atualizar(TipoOperacaoBD operacao) {
         msg = "Operação realizada com sucesso!";
         try {
+            
+            // Aqui faz a INCLUSÃO: Salva um novo cliente no banco de dados.
             if (operacao == TipoOperacaoBD.INCLUSAO) {
                 sql = "INSERT INTO cliente(cpf, nome, email, endereco, telefone) VALUES (?, ?, ?, ?, ?)";
                 statement = bd.connection.prepareStatement(sql);
@@ -64,6 +65,7 @@ public class ClienteDAO implements OperacaoBD {
                 statement.setString(4, cliente.getEndereco() != null ? cliente.getEndereco().toString() : "");
                 statement.setString(5, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
 
+            // Aqui faz a ALTERAÇÃO: Atualiza os dados de um cliente que já existe.
             } else if (operacao == TipoOperacaoBD.ALTERACAO) {
                 sql = "UPDATE cliente SET nome = ?, email = ?, endereco = ?, telefone = ? WHERE cpf = ?";
                 statement = bd.connection.prepareStatement(sql);
@@ -74,6 +76,7 @@ public class ClienteDAO implements OperacaoBD {
                 statement.setString(4, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
                 statement.setString(5, cliente.getCpf());
 
+            // Aqui faz a EXCLUSÃO: Apaga o cliente do banco de dados usando o CPF.
             } else if (operacao == TipoOperacaoBD.EXCLUSAO) {
                 sql = "DELETE FROM cliente WHERE cpf = ?";
                 statement = bd.connection.prepareStatement(sql);
@@ -87,7 +90,7 @@ public class ClienteDAO implements OperacaoBD {
         } catch (SQLException erro) {
             msg = "Falha na operação - " + erro.toString();
         }
-
+        
         return msg;
     }
 }
