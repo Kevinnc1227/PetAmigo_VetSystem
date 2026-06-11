@@ -1,31 +1,31 @@
 package model;
 
 public class Endereco {
-	private String logadouro;
+	private String logradouro;
 	private String numero;
 	private String bairro;
 	private String cidade;
 
 	public Endereco() {
-		this.logadouro = "";
+		this.logradouro = "";
 		this.numero = "";
 		this.bairro = "";
 		this.cidade = "";
 	}
 
-	public Endereco(String logadouro, String numero, String bairro, String cidade) {
-		this.logadouro = logadouro;
+	public Endereco(String logradouro, String numero, String bairro, String cidade) {
+		this.logradouro = logradouro;
 		this.numero = numero;
 		this.bairro = bairro;
 		this.cidade = cidade;
 	}
 
-	public String getLogadouro() {
-		return this.logadouro;
+	public String getLogradouro() {
+		return this.logradouro;
 	}
 
-	public void setLogadouro(String logadouro) {
-		this.logadouro = logadouro;
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
 
 	public String getNumero() {
@@ -53,7 +53,7 @@ public class Endereco {
 	}
 
 	public String toString() {
-		return "Rua " + this.getLogadouro() + ", nº" + this.getNumero() + ", " + this.getBairro() + ", "
+		return "Rua " + this.getLogradouro() + ", nº" + this.getNumero() + ", " + this.getBairro() + ", "
 				+ this.getCidade();
 	}
 }
