@@ -143,11 +143,17 @@ public class TelaCadastroCliente extends JFrame {
 				}
 			}
 		});
+		// É só trocar o final pelo nome da nova foto (ex: "foto_cliente.png")
+		java.net.URL url = getClass().getResource("/Pictures/download.jpg");
+
+		if (url != null) {
+			java.awt.Image icone = java.awt.Toolkit.getDefaultToolkit().getImage(url);
+			this.setIconImage(icone);
+		} else {
+			System.out.println("Erro: Não encontrei a nova imagem!");
+		}
 	}
 
-	/**
-	 * Método auxiliar para limpar o formulário após salvar.
-	 */
 	private void limparCampos() {
 		txtNome.setText("");
 		txtCpf.setText("");
