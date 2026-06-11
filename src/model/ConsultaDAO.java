@@ -9,12 +9,12 @@ public class ConsultaDAO {
 	private BD bd;
 	private PreparedStatement statement;
 	private ResultSet resultSet;
-	private String men;
+	private String msg;
 	private String sql;
 
 	public ConsultaDAO() {
 		this.bd = new BD();
-		this.men = "";
+		this.msg = "";
 	}
 
 	public boolean localizar() {
@@ -22,7 +22,7 @@ public class ConsultaDAO {
 		this.sql = "SELECT * FROM consulta WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
 
 		if (!bd.getConnection()) {
-			this.men = "Falha ao conectar ao banco de dados.";
+			this.msg = "Falha ao conectar ao banco de dados.";
 			return false;
 		}
 
@@ -39,11 +39,11 @@ public class ConsultaDAO {
 				consulta.setValor(this.resultSet.getFloat("valor"));
 				return true;
 			} else {
-				this.men = "Consulta não encontrada.";
+				this.msg = "Consulta não encontrada.";
 				return false;
 			}
 		} catch (SQLException e) {
-			this.men = "Erro ao localizar consulta: " + e.getMessage();
+			this.msg = "Erro ao localizar consulta: " + e.getMessage();
 			return false;
 		} finally {
 			bd.close();
@@ -67,7 +67,7 @@ public class ConsultaDAO {
 				this.statement.setFloat(5, consulta.getValor());
 
 				this.statement.executeUpdate();
-				this.men = "Consulta agendada com sucesso!";
+				this.msg = "Consulta agendada com sucesso!";
 			} else if (operacao == 2) {
 				this.sql = "UPDATE consulta SET valor = ? WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
 				this.statement = bd.connection.prepareStatement(this.sql);
@@ -78,7 +78,7 @@ public class ConsultaDAO {
 				this.statement.setInt(4, consulta.getAnimal().getId());
 
 				this.statement.executeUpdate();
-				this.men = "Consulta alterada com sucesso!";
+				this.msg = "Consulta alterada com sucesso!";
 			} else if (operacao == 3) {
 				this.sql = "DELETE FROM consulta WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
 				this.statement = bd.connection.prepareStatement(this.sql);
@@ -88,18 +88,18 @@ public class ConsultaDAO {
 				this.statement.setInt(3, consulta.getAnimal().getId());
 
 				this.statement.executeUpdate();
-				this.men = "Consulta cancelada/excluída com sucesso!";
+				this.msg = "Consulta cancelada/excluída com sucesso!";
 			} else {
-				this.men = "Operação inválida.";
+				this.msg = "Operação inválida.";
 			}
 
 		} catch (SQLException e) {
-			this.men = "Erro na operação " + operacao + ": " + e.getMessage();
+			this.msg = "Erro na operação " + operacao + ": " + e.getMessage();
 		} finally {
 			bd.close();
 		}
 
-		return this.men;
+		return this.msg;
 	}
 
 	public Consulta getConsulta() {
@@ -111,6 +111,6 @@ public class ConsultaDAO {
 	}
 
 	public String getMen() {
-		return men;
+		return msg;
 	}
 }
