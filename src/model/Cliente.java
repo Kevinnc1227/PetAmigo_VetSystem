@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Cliente extends Pessoa {
 	private String cpf;
 	private ArrayList<Animal> pets;
-	
+
 	public Cliente() {
 		super();
 		this.cpf = "";
 		this.pets = new ArrayList<Animal>();
 	}
-	
+
 	public Cliente(String cpf) {
 		super();
 		this.cpf = cpf;
@@ -33,13 +33,14 @@ public class Cliente extends Pessoa {
 	public void setPets(ArrayList<Animal> pets) {
 		this.pets = pets;
 	}
-	
+
+	public void cadastrarPet(Animal pet) {
+		pets.add(pet);
+	}
+
 	public String toString() {
-		return
-		"Nome: " + this.getNome() + "\r\n" + 
-		"Email: " + this.getEmail() + "\r\n" +
-		"CPF: " + this.getCpf() + "\r\n" + 
-		"Telefone: " + this.getTelefone().toString() + "\r\n" +
-		"Endereco: " + this.getEndereco().toString();
+		return "Nome: " + this.getNome() + "\r\n" + "Email: " + this.getEmail() + "\r\n" + "CPF: " + this.getCpf()
+				+ "\r\n" + "Telefone: " + this.getTelefone().toString() + "\r\n" + "Endereco: "
+				+ this.getEndereco().toString();
 	}
 }
