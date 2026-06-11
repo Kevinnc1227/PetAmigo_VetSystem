@@ -1,5 +1,4 @@
 package view;
-
 import javax.swing.JOptionPane;
 
 import model.Animal;
@@ -18,6 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import model.TipoAnimal;
 import javax.swing.JTextField;
+
+
+
 
 public class TelaCadastroAnimal extends JFrame {
 
@@ -98,56 +100,65 @@ public class TelaCadastroAnimal extends JFrame {
 		btnSalvar.setBounds(150, 240, 120, 30);
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
+				 try {
 
-					if (txtNome.getText().trim().isEmpty()) {
-						JOptionPane.showMessageDialog(null, "Informe o nome do animal.");
-						return;
-					}
+			            if(txtNome.getText().trim().isEmpty()) {
+			                JOptionPane.showMessageDialog(
+			                        null,
+			                        "Informe o nome do animal."
+			                );
+			                return;
+			            }
 
-					if (cbxAnimal.getSelectedItem() == null) {
-						JOptionPane.showMessageDialog(null, "Selecione a espécie.");
-						return;
-					}
+			            if(cbxAnimal.getSelectedItem() == null) {
+			                JOptionPane.showMessageDialog(
+			                        null,
+			                        "Selecione a espécie."
+			                );
+			                return;
+			            }
 
-					String nome = txtNome.getText();
+			            String nome = txtNome.getText();
 
-					float peso = Float.parseFloat(txtPeso.getText());
+			            float peso =
+			                    Float.parseFloat(txtPeso.getText());
 
-					TipoAnimal especie = (TipoAnimal) cbxAnimal.getSelectedItem();
+			            TipoAnimal especie =
+			                    (TipoAnimal) cbxAnimal.getSelectedItem();
 
-					Animal animal = new Animal(nome, especie, peso);
+			            Animal animal =
+			                    new Animal(nome, especie, peso);
 
-					AnimalDAO dao = new AnimalDAO();
-					dao.setAnimal(animal);
+			            AnimalDAO dao = new AnimalDAO();
+			            dao.setAnimal(animal);
 
-					String mensagem = dao.atualizar(1);
+			            String mensagem = dao.atualizar(1);
 
-					JOptionPane.showMessageDialog(null, mensagem);
+			            JOptionPane.showMessageDialog(
+			                    null,
+			                    mensagem
+			            );
 
-					txtNome.setText("");
-					txtPeso.setText("");
-					cbxAnimal.setSelectedIndex(-1);
+			            txtNome.setText("");
+			            txtPeso.setText("");
+			            cbxAnimal.setSelectedIndex(-1);
 
-				} catch (NumberFormatException ex) {
+			        } catch(NumberFormatException ex) {
 
-					JOptionPane.showMessageDialog(null, "Peso inválido.");
+			            JOptionPane.showMessageDialog(
+			                    null,
+			                    "Peso inválido."
+			            );
 
-				} catch (Exception ex) {
+			        } catch(Exception ex) {
 
-					JOptionPane.showMessageDialog(null, ex.getMessage());
-				}
-			}
-		});
-		contentPane.add(btnSalvar);
-		// É só trocar o final pelo nome da nova foto (ex: "foto_cliente.png")
-		java.net.URL url = getClass().getResource("/Pictures/banana cat.jpg");
-
-		if (url != null) {
-			java.awt.Image icone = java.awt.Toolkit.getDefaultToolkit().getImage(url);
-			this.setIconImage(icone);
-		} else {
-			System.out.println("Erro: Não encontrei a nova imagem!");
-		}
+			            JOptionPane.showMessageDialog(
+			                    null,
+			                    ex.getMessage()
+			            );
+			        }
+			    }
+			});
+			contentPane.add(btnSalvar);
 	}
 }
