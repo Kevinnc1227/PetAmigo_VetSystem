@@ -1,5 +1,7 @@
 package model;
 
 public enum TipoOperacaoBD {
-	INCLUSAO, ALTERACAO, EXCLUSAO;
+	INCLUSAO,
+	ALTERACAO,
+	EXCLUSAO
 }

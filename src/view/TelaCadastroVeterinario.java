@@ -14,28 +14,28 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import model.BD;
-import model.Cliente;
-import model.ClienteDAO;
+import model.Veterinario;
+import model.VeterinarioDAO;
 import model.TipoOperacaoBD;
 
-public class TelaCadastroCliente extends JFrame {
+public class TelaCadastroVeterinario extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	private JTextField txtNome;
-	private JTextField txtCpf;
+	private JTextField txtCrmv;
 	private JTextField txtEmail;
 	private JButton btnSalvar;
 
 	/**
-	 * Inicializa a aplicação (Método Main para testes da tela).
+	 * Inicializa a aplicação (Método Main para testes isolados da tela).
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaCadastroCliente frame = new TelaCadastroCliente();
+					TelaCadastroVeterinario frame = new TelaCadastroVeterinario();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,21 +47,22 @@ public class TelaCadastroCliente extends JFrame {
 	/**
 	 * Cria e configura o Frame (Construtor).
 	 */
-	public TelaCadastroCliente() {
-		setTitle("PetAmigo - Cadastro de Clientes");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Evita fechar o programa inteiro ao fechar só a tela
+	public TelaCadastroVeterinario() {
+		setTitle("PetAmigo - Cadastro de Veterinários");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel lblTitulo = new JLabel("Cadastro de Clientes");
+		// Título da Janela
+		JLabel lblTitulo = new JLabel("Cadastro de Veterinários");
 		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblTitulo.setBounds(110, 11, 220, 25);
 		contentPane.add(lblTitulo);
 
-		// Campo Nome
+		// Campo Nome Completo
 		JLabel lblNome = new JLabel("Nome Completo:");
 		lblNome.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNome.setBounds(30, 60, 150, 20);
@@ -72,16 +73,16 @@ public class TelaCadastroCliente extends JFrame {
 		contentPane.add(txtNome);
 		txtNome.setColumns(10);
 
-		// Campo CPF
-		JLabel lblCpf = new JLabel("CPF:");
-		lblCpf.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblCpf.setBounds(30, 100, 150, 20);
-		contentPane.add(lblCpf);
+		// Campo CRMV (Diferencial do Veterinário no UML)
+		JLabel lblCrmv = new JLabel("CRMV:");
+		lblCrmv.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblCrmv.setBounds(30, 100, 150, 20);
+		contentPane.add(lblCrmv);
 
-		txtCpf = new JTextField();
-		txtCpf.setBounds(180, 100, 200, 22);
-		contentPane.add(txtCpf);
-		txtCpf.setColumns(10);
+		txtCrmv = new JTextField();
+		txtCrmv.setBounds(180, 100, 200, 22);
+		contentPane.add(txtCrmv);
+		txtCrmv.setColumns(10);
 
 		// Campo Email
 		JLabel lblEmail = new JLabel("Email:");
@@ -94,7 +95,7 @@ public class TelaCadastroCliente extends JFrame {
 		contentPane.add(txtEmail);
 		txtEmail.setColumns(10);
 
-		// Botão Salvar (Com os Eventos Conectados)
+		// Botão Salvar
 		btnSalvar = new JButton("Salvar");
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSalvar.setBounds(150, 240, 120, 30);
@@ -103,37 +104,38 @@ public class TelaCadastroCliente extends JFrame {
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// Validar se os campos não estão vazios
-				if (txtNome.getText().trim().isEmpty() || txtCpf.getText().trim().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Nome e CPF são obrigatórios!", "Aviso",
+				// 1. Etapa de Validação: Nome e CRMV são obrigatórios
+				if (txtNome.getText().trim().isEmpty() || txtCrmv.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Nome e CRMV são obrigatórios!", "Aviso",
 							JOptionPane.WARNING_MESSAGE);
 					return;
 				}
 
-				// Capturar os dados digitados na tela e montar o Modelo
-				Cliente cliente = new Cliente();
-				cliente.setNome(txtNome.getText());
-				cliente.setCpf(txtCpf.getText());
-				cliente.setEmail(txtEmail.getText());
+				// 2. Etapa de Captura: Coleta as Strings dos campos e monta o Modelo
+				Veterinario veterinario = new Veterinario();
+				veterinario.setNome(txtNome.getText());
+				veterinario.setCrmv(txtCrmv.getText());
+				veterinario.setEmail(txtEmail.getText());
 
+				// 3. Gerenciamento de Conexão: Instancia o controlador de banco de dados
 				BD bd = new BD();
 
-				// Tentar conectar
+				// 4. Etapa de Persistência: Abre a conexão de forma segura
 				if (bd.getConnection()) {
-					ClienteDAO clienteDao = new ClienteDAO();
-					clienteDao.setBd(bd);
-					clienteDao.setCliente(cliente);
+					VeterinarioDAO veterinarioDao = new VeterinarioDAO();
+					veterinarioDao.setBd(bd);
+					veterinarioDao.setVeterinario(veterinario);
 
-					// Executa a inclusão utilizando a nossa classe TipoOperacaoBD
-					String mensagemRetorno = clienteDao.atualizar(TipoOperacaoBD.INCLUSAO);
+					// Dispara a query através da estrutura Enum que limpamos
+					String mensagemRetorno = veterinarioDao.atualizar(TipoOperacaoBD.INCLUSAO);
 
-					// Fecha a conexão com o banco de dados de forma segura
+					// 5. Etapa de Encerramento: Garante o fechamento da conexão aberta pela View
 					bd.close();
 
-					// Exibe o veredito para o usuário
+					// 6. Veredito: Exibe o JOptionPane de retorno para o usuário
 					JOptionPane.showMessageDialog(null, mensagemRetorno, "Resultado", JOptionPane.INFORMATION_MESSAGE);
 
-					// Limpa os campos da tela se der certo
+					// Limpa os campos se gravou perfeitamente
 					if (mensagemRetorno.contains("sucesso")) {
 						limparCampos();
 					}
@@ -144,7 +146,7 @@ public class TelaCadastroCliente extends JFrame {
 			}
 		});
 		// É só trocar o final pelo nome da nova foto (ex: "foto_cliente.png")
-		java.net.URL url = getClass().getResource("/Pictures/download.jpg");
+		java.net.URL url = getClass().getResource("/Pictures/download (1).jpg");
 
 		if (url != null) {
 			java.awt.Image icone = java.awt.Toolkit.getDefaultToolkit().getImage(url);
@@ -154,9 +156,12 @@ public class TelaCadastroCliente extends JFrame {
 		}
 	}
 
+	/**
+	 * Método auxiliar para limpar o formulário após a gravação com sucesso.
+	 */
 	private void limparCampos() {
 		txtNome.setText("");
-		txtCpf.setText("");
+		txtCrmv.setText("");
 		txtEmail.setText("");
 	}
 }

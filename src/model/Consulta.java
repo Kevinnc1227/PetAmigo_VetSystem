@@ -1,6 +1,6 @@
 package model;
 
-public class Consulta extends Animal {
+public class Consulta{
 	private Data data;
 	private Hora hora;
 	private Animal animal;
@@ -9,7 +9,7 @@ public class Consulta extends Animal {
 	private Pagamento pagamento;
 
 	public Consulta(String nome, String especie) {
-		super(nome, especie);
+		super();
 	}
 
 	public Data getData() {
@@ -63,5 +63,10 @@ public class Consulta extends Animal {
 	public void realizarAtendimento() {
 
 		System.out.println("Atendimento realizado para o animal: " + this.animal);
+	}
+
+	public Animal getVeterinario() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
