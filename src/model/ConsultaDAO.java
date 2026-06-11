@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ConsultaDAO {
+public class ConsultaDAO implements OperacaoBD {
 	private Consulta consulta;
 	private BD bd;
 	private PreparedStatement statement;
@@ -50,13 +50,13 @@ public class ConsultaDAO {
 		}
 	}
 
-	public String atualizar(int operacao) {
+	public String atualizar(TipoOperacaoBD operacao) {
 		if (!bd.getConnection()) {
 			return "Falha ao conectar ao banco de dados.";
 		}
 
 		try {
-			if (operacao == 1) {
+			if (operacao == TipoOperacaoBD.INCLUSAO) {
 				this.sql = "INSERT INTO consulta (data_consulta, hora_consulta, animal_id, veterinario_crmv, valor) VALUES (?, ?, ?, ?, ?)";
 				this.statement = bd.connection.prepareStatement(this.sql);
 
@@ -68,7 +68,7 @@ public class ConsultaDAO {
 
 				this.statement.executeUpdate();
 				this.msg = "Consulta agendada com sucesso!";
-			} else if (operacao == 2) {
+			} else if (operacao == TipoOperacaoBD.ALTERACAO) {
 				this.sql = "UPDATE consulta SET valor = ? WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
 				this.statement = bd.connection.prepareStatement(this.sql);
 
@@ -79,7 +79,7 @@ public class ConsultaDAO {
 
 				this.statement.executeUpdate();
 				this.msg = "Consulta alterada com sucesso!";
-			} else if (operacao == 3) {
+			} else if (operacao == TipoOperacaoBD.EXCLUSAO) {
 				this.sql = "DELETE FROM consulta WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
 				this.statement = bd.connection.prepareStatement(this.sql);
 
@@ -110,7 +110,7 @@ public class ConsultaDAO {
 		this.consulta = consulta;
 	}
 
-	public String getMen() {
+	public String getMsg() {
 		return msg;
 	}
 }

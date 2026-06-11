@@ -24,7 +24,7 @@ public class Endereco {
 		return this.logadouro;
 	}
 
-	public void setLodagouro(String logadouro) {
+	public void setLogadouro(String logadouro) {
 		this.logadouro = logadouro;
 	}
 

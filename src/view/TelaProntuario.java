@@ -128,7 +128,7 @@ public class TelaProntuario extends JFrame {
 
                     ProntuarioDAO dao = new ProntuarioDAO();
                     dao.setProntuario(prontuario);
-                    String mensagem = dao.atualizar(1);
+                    String mensagem = dao.atualizar(model.TipoOperacaoBD.INCLUSAO);
                     JOptionPane.showMessageDialog(null, mensagem);
 
                 } catch (Exception ex) {

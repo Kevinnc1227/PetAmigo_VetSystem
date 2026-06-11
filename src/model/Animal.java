@@ -7,6 +7,10 @@ public class Animal {
 	private float peso;
 	private Prontuario prontuario;
 
+	public Animal() {
+		this.prontuario = new Prontuario();
+	}
+
 	public Animal(int id, String nome, TipoAnimal especie, float peso) {
 		this.setId(id);
 		this.setNome(nome);

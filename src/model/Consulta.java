@@ -1,6 +1,6 @@
 package model;
 
-public class Consulta extends Animal {
+public class Consulta {
 	private Data data;
 	private Hora hora;
 	private Animal animal;
@@ -8,8 +8,12 @@ public class Consulta extends Animal {
 	private float valor;
 	private Pagamento pagamento;
 
-	public Consulta(String nome, String especie) {
-		super(nome, especie);
+	public Consulta() {
+		this.data = new Data();
+		this.hora = new Hora();
+		this.animal = new Animal();
+		this.vet = new Veterinario();
+		this.pagamento = new Pagamento();
 	}
 
 	public Data getData() {
