@@ -61,26 +61,23 @@ public class ProntuarioDAO implements OperacaoBD {
 	    public String atualizar(TipoOperacaoBD operacao) {
 	    	
 	    	
-	    	
-	    	try {
+			try {
 				bd.getConnection();
-				if(operacao == TipoOperacaoBD.INCLUSAO) { //INCLUSAO
-				this.sql = "INSERT INTO Prontuario " +
-                "(idAnimal, historico, ultimaVacina, observacoes) " +
-                "VALUES (?, ?, ?, ?)";
-				this.statement = bd.connection.prepareStatement(sql);
-				 this.statement.setInt( 1,prontuario.getIdAnimal());
-				 this.statement.setString( 2,prontuario.getHistorico());
-				 this.statement.setString( 3,prontuario.getUltimaVacina());
-				 this.statement.setString( 4,prontuario.getObservacoes());
-			     this.statement.executeUpdate();
-			     this.msg = "Prontuário incluído com sucesso!";
-	
-			} else if(operacao == TipoOperacaoBD.ALTERACAO) { // ALTERA
- 
-	            this.sql =
-	                "UPDATE Prontuario " +
-	                "SET historico=?, " +
+				if (operacao == TipoOperacaoBD.INCLUSAO) { // INCLUSAO
+					this.sql = "INSERT INTO Prontuario " + "(idAnimal, historico, ultimaVacina, observacoes) "
+							+ "VALUES (?, ?, ?, ?)";
+					this.statement = bd.connection.prepareStatement(sql);
+					this.statement.setInt(1, prontuario.getIdAnimal());
+					this.statement.setString(2, prontuario.getHistorico());
+					this.statement.setString(3, prontuario.getUltimaVacina());
+					this.statement.setString(4, prontuario.getObservacoes());
+					this.statement.executeUpdate();
+					this.msg = "Prontuário incluído com sucesso!";
+
+				} else if (operacao == TipoOperacaoBD.ALTERACAO) { // ALTERA
+
+					this.sql = "UPDATE Prontuario " + "SET historico=?, "
+							+
 	                "ultimaVacina=?, " +
 	                "observacoes=? " +
 	                "WHERE idAnimal=?";

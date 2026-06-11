@@ -20,6 +20,10 @@ public class Endereco {
 		this.cidade = cidade;
 	}
 
+	public String getlogradouro() {
+		return this.logradouro;
+	}
+
 	public String getLogradouro() {
 		return this.logradouro;
 	}
@@ -53,7 +57,7 @@ public class Endereco {
 	}
 
 	public String toString() {
-		return "Rua " + this.getLogradouro() + ", nº" + this.getNumero() + ", " + this.getBairro() + ", "
+		return "Rua " + this.getlogradouro() + ", nº" + this.getNumero() + ", " + this.getBairro() + ", "
 				+ this.getCidade();
 	}
 }
