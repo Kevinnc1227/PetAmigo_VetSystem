@@ -1,6 +1,7 @@
 package model;
 
-public class Consulta{
+public class Consulta {
+
 	private Data data;
 	private Hora hora;
 	private Animal animal;
@@ -10,6 +11,15 @@ public class Consulta{
 
 	public Consulta(String nome, String especie) {
 		super();
+	}
+
+	public Consulta() {
+		this.data = new Data();
+		this.hora = new Hora();
+		this.animal = new Animal(0, null, null, valor);
+		this.vet = new Veterinario();
+		this.pagamento = new Pagamento();
+
 	}
 
 	public Data getData() {

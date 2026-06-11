@@ -121,7 +121,7 @@ public class TelaCadastroAnimal extends JFrame {
 					AnimalDAO dao = new AnimalDAO();
 					dao.setAnimal(animal);
 
-					String mensagem = dao.atualizar(1);
+					String mensagem = dao.atualizar(model.TipoOperacaoBD.INCLUSAO);
 
 					JOptionPane.showMessageDialog(null, mensagem);
 

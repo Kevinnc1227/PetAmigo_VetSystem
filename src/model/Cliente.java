@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public class Cliente extends Pessoa {
+
 	private String cpf;
 	private ArrayList<Animal> pets;
 
@@ -18,8 +19,24 @@ public class Cliente extends Pessoa {
 		this.pets = new ArrayList<Animal>();
 	}
 
+	public void cadastrarPet(Animal animal) {
+		if (animal != null) {
+			this.pets.add(animal);
+		}
+	}
+
 	public String getCpf() {
 		return cpf;
+	}
+
+	public void setPets(ArrayList<Animal> pets) {
+		this.pets = pets;
+	}
+
+	public String toString() {
+		return "Nome: " + this.getNome() + "\r\n" + "Email: " + this.getEmail() + "\r\n" + "CPF: " + this.getCpf()
+				+ "\r\n" + "Telefone: " + this.getTelefone().toString() + "\r\n" + "Endereco: "
+				+ this.getEndereco().toString();
 	}
 
 	public void setCpf(String cpf) {
@@ -30,17 +47,4 @@ public class Cliente extends Pessoa {
 		return pets;
 	}
 
-	public void setPets(ArrayList<Animal> pets) {
-		this.pets = pets;
-	}
-
-	public void cadastrarPet(Animal pet) {
-		pets.add(pet);
-	}
-
-	public String toString() {
-		return "Nome: " + this.getNome() + "\r\n" + "Email: " + this.getEmail() + "\r\n" + "CPF: " + this.getCpf()
-				+ "\r\n" + "Telefone: " + this.getTelefone().toString() + "\r\n" + "Endereco: "
-				+ this.getEndereco().toString();
-	}
 }
