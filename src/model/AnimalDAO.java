@@ -4,18 +4,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AnimalDAO {
-
+public class AnimalDAO implements OperacaoBD {
     private Animal animal;
     private BD bd;
     private PreparedStatement statement;
     private ResultSet resultSet;
-    private String men;
+    private String msg;
     private String sql;
 
     public AnimalDAO() {
         this.bd = new BD();
-        this.men = "";
+        this.msg = "";
     }
 
     public boolean localizar() {
@@ -36,19 +35,19 @@ public class AnimalDAO {
                 animal.setPeso(this.resultSet.getFloat("peso"));
                 return true;
             }
-            this.men = "Animal não encontrado.";
+            this.msg = "Animal não encontrado.";
             return false;
         } catch (SQLException e) {
-            this.men = "Erro ao localizar animal: " + e.getMessage();
+            this.msg = "Erro ao localizar animal: " + e.getMessage();
             return false;
         } finally {
             bd.close();
         }
     }
-    public String atualizar(int operacao) {
+    public String atualizar(TipoOperacaoBD operacao) {
         try {
             bd.getConnection();
-            if (operacao == 1) { // INCLUSAO
+            if (operacao == TipoOperacaoBD.INCLUSAO) { // INCLUSAO
 
                 this.sql =
                         "INSERT INTO Animal(nome, especie, peso) VALUES (?, ?, ?)";
@@ -60,10 +59,10 @@ public class AnimalDAO {
                 this.statement.setFloat(3, animal.getPeso());
                 this.statement.executeUpdate();
 
-                this.men = "Animal incluído com sucesso!";
+                this.msg = "Animal incluído com sucesso!";
             }
 
-            else if (operacao == 2) { // ALTERACAO
+            else if (operacao == TipoOperacaoBD.ALTERACAO) { // ALTERACAO
                 this.sql = "UPDATE Animal SET nome=?, especie=?, peso=? WHERE id=?";
 
                 this.statement = bd.connection.prepareStatement(this.sql);
@@ -74,28 +73,28 @@ public class AnimalDAO {
                 this.statement.setInt(4, animal.getId());
                 this.statement.executeUpdate();
 
-                this.men = "Animal alterado com sucesso!";
+                this.msg = "Animal alterado com sucesso!";
             }
 
-            else if (operacao == 3) { // EXCLUSAO
+            else if (operacao == TipoOperacaoBD.EXCLUSAO) { // EXCLUSAO
                 this.sql = "DELETE FROM Animal WHERE id=?";
 
                 this.statement = bd.connection.prepareStatement(this.sql);
 
                 this.statement.setInt(1, animal.getId());
                 this.statement.executeUpdate();
-                this.men = "Animal excluído com sucesso!";
+                this.msg = "Animal excluído com sucesso!";
             }
             else {
-                this.men = "Operação inválida.";
+                this.msg = "Operação inválida.";
             }
 
         } catch (SQLException e) {
-            this.men = "Erro na operação: " + e.getMessage();
+            this.msg = "Erro na operação: " + e.getMessage();
         } finally {
             bd.close();
         }
-        return this.men;
+        return this.msg;
     }
     public Animal getAnimal() {
         return animal;
@@ -105,7 +104,7 @@ public class AnimalDAO {
         this.animal = animal;
     }
 
-    public String getMen() {
-        return men;
+    public String getMsg() {
+        return msg;
     }
 }

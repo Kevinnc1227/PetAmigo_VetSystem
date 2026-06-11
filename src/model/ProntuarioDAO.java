@@ -4,17 +4,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProntuarioDAO {
+public class ProntuarioDAO implements OperacaoBD {
 	private Prontuario prontuario;
 	private BD bd;
 	private PreparedStatement statement;
 	private ResultSet resultSet;
-	private String men;
+	private String msg;
 	private String sql;
 	
 	public ProntuarioDAO() {
 		this.bd = new BD();
-		this.men = "";
+		this.msg = "";
 	}
 	public Prontuario getProntuario() {
 		return prontuario;
@@ -24,9 +24,9 @@ public class ProntuarioDAO {
 		this.prontuario = prontuario;
 	}
 
-	public String getMen() {
-		return men;
-	    }
+	public String getMsg() {
+		return msg;
+	}
 	
 	
 	public boolean localizar() {
@@ -44,13 +44,13 @@ public class ProntuarioDAO {
 					prontuario.setObservacoes(this.resultSet.getString("observacoes"));
 					return true;
 				}else {
-					this.men = "Prontuário não encontrado.";
+					this.msg = "Prontuário não encontrado.";
 			        return false;
 				}
 				
 			} catch(SQLException e) {
 
-		        this.men = e.getMessage();
+		        this.msg = e.getMessage();
 		        return false;
 
 		    } finally {
@@ -58,13 +58,13 @@ public class ProntuarioDAO {
 		    }
 	    }
 	    
-	    public String atualizar(int operacao) {
+	    public String atualizar(TipoOperacaoBD operacao) {
 	    	
 	    	
 	    	
 	    	try {
 				bd.getConnection();
-				if(operacao == 1) { //INCLUSAO
+				if(operacao == TipoOperacaoBD.INCLUSAO) { //INCLUSAO
 				this.sql = "INSERT INTO Prontuario " +
                 "(idAnimal, historico, ultimaVacina, observacoes) " +
                 "VALUES (?, ?, ?, ?)";
@@ -74,26 +74,26 @@ public class ProntuarioDAO {
 				 this.statement.setString( 3,prontuario.getUltimaVacina());
 				 this.statement.setString( 4,prontuario.getObservacoes());
 			     this.statement.executeUpdate();
-			     this.men = "Prontuário incluído com sucesso!";
+			     this.msg = "Prontuário incluído com sucesso!";
 	
-			} else if(operacao == 2) { // ALTERA
-
+			} else if(operacao == TipoOperacaoBD.ALTERACAO) { // ALTERA
+ 
 	            this.sql =
 	                "UPDATE Prontuario " +
 	                "SET historico=?, " +
 	                "ultimaVacina=?, " +
 	                "observacoes=? " +
 	                "WHERE idAnimal=?";
-
+ 
 	            this.statement = bd.connection.prepareStatement(this.sql);
-
+ 
 	            this.statement.setString(1,prontuario.getHistorico());
 	            this.statement.setString(2,prontuario.getUltimaVacina());
 	            this.statement.setString(3,prontuario.getObservacoes());
 	            this.statement.setInt(4,prontuario.getIdAnimal());
 	            this.statement.executeUpdate();
-	            this.men = "Prontuário alterado com sucesso!";
-			}else if(operacao == 3) {//DELETA
+	            this.msg = "Prontuário alterado com sucesso!";
+			}else if(operacao == TipoOperacaoBD.EXCLUSAO) {//DELETA
 	            this.sql =
 	            	"DELETE FROM Prontuario " +
 	                "WHERE idAnimal=?";
@@ -101,17 +101,18 @@ public class ProntuarioDAO {
 	            this.statement =bd.connection.prepareStatement(this.sql);
 	            this.statement.setInt( 1,prontuario.getIdAnimal());
 	            this.statement.executeUpdate();
-	            this.men = "Prontuário excluído com sucesso!";
+	            this.msg = "Prontuário excluído com sucesso!";
 	        }
 			else {
-	            this.men = "Operação inválida.";
+	            this.msg = "Operação inválida.";
 	        }
 
 	    } catch(SQLException e) {
-	        this.men = "Erro: " + e.getMessage();
+	        this.msg = "Erro: " + e.getMessage();
 	    } finally {
 	        bd.close();
 	    }
-	    return this.men;
+	    return this.msg;
 	}
 }
+

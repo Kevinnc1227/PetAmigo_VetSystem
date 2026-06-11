@@ -3,44 +3,50 @@ package model;
 import java.util.ArrayList;
 
 public class Cliente extends Pessoa {
-	private String cpf;
-	private ArrayList<Animal> pets;
+    private String cpf;
+    private ArrayList<Animal> pets;
+    
+    public Cliente() {
+        super();
+        this.cpf = "";
+        this.pets = new ArrayList<Animal>();
+    }
+    
+    public Cliente(String cpf) {
+        super();
+        this.cpf = cpf;
+        this.pets = new ArrayList<Animal>();
+    }
 
-	public Cliente() {
-		super();
-		this.cpf = "";
-		this.pets = new ArrayList<Animal>();
-	}
 
-	public Cliente(String cpf) {
-		super();
-		this.cpf = cpf;
-		this.pets = new ArrayList<Animal>();
-	}
+    public void cadastrarPet(Animal animal) {
+        if (animal != null) {
+            this.pets.add(animal);
+        }
+    }
 
-	public String getCpf() {
-		return cpf;
-	}
+    public String getCpf() {
+        return cpf;
+    }
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
 
-	public ArrayList<Animal> getPets() {
-		return pets;
-	}
+    public ArrayList<Animal> getPets() {
+        return pets;
+    }
 
-	public void setPets(ArrayList<Animal> pets) {
-		this.pets = pets;
-	}
-
-	public void cadastrarPet(Animal pet) {
-		pets.add(pet);
-	}
-
-	public String toString() {
-		return "Nome: " + this.getNome() + "\r\n" + "Email: " + this.getEmail() + "\r\n" + "CPF: " + this.getCpf()
-				+ "\r\n" + "Telefone: " + this.getTelefone().toString() + "\r\n" + "Endereco: "
-				+ this.getEndereco().toString();
-	}
+    public void setPets(ArrayList<Animal> pets) {
+        this.pets = pets;
+    }
+    
+    public String toString() {
+        return
+        "Nome: " + this.getNome() + "\r\n" + 
+        "Email: " + this.getEmail() + "\r\n" +
+        "CPF: " + this.getCpf() + "\r\n" + 
+        "Telefone: " + (this.getTelefone() != null ? this.getTelefone().toString() : "") + "\r\n" +
+        "Endereco: " + (this.getEndereco() != null ? this.getEndereco().toString() : "");
+    }
 }

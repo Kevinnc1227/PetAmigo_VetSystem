@@ -30,6 +30,10 @@ public class Pagamento {
 	}
 
 	public boolean confirmarPagamento() {
+		if (this.status == StatusPagamento.PENDENTE) {
+			this.status = StatusPagamento.PAGO;
+			return true;
+		}
 		return false;
 	}
 

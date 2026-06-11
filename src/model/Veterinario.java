@@ -35,6 +35,7 @@ public class Veterinario extends Pessoa {
 	public String toString() {
 		return "Nome: " + this.getNome() + "\r\n" + "Email: " + this.getEmail() + "\r\n" + "CRMV: " + this.getCrmv()
 				+ "\r\n" + "Especialidade: " + this.getEspecialidade() + "\r\n" + "Telefone: "
-				+ this.getTelefone().toString() + "\r\n" + "Endereço: " + this.getEndereco().toString();
+				+ (this.getTelefone() != null ? this.getTelefone().toString() : "") + "\r\n" + "Endereço: "
+				+ (this.getEndereco() != null ? this.getEndereco().toString() : "");
 	}
 }
