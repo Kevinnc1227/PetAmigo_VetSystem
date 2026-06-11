@@ -83,10 +83,20 @@ public class TelaPrincipal extends JFrame {
 		});
 		mnConsulta.add(miAgendarConsulta);
 
+		mnConsulta.add(miAgendarConsulta);
+
+		JMenuItem miConsultarAgendamentos = new JMenuItem("Consultar Agendamentos");
+		miConsultarAgendamentos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaConsultaAgendamentos telaConsulta = new TelaConsultaAgendamentos();
+				telaConsulta.setVisible(true);
+			}
+		});
+		mnConsulta.add(miConsultarAgendamentos);
 		//
 		JMenu mnAtendimento = new JMenu("Atendimento");
 		menuBar.add(mnAtendimento);
-	
+
 		JMenuItem miProntuario = new JMenuItem("Prontuário");
 		miProntuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -95,17 +105,26 @@ public class TelaPrincipal extends JFrame {
 			}
 		});
 		mnAtendimento.add(miProntuario);
-		
+
 		//
 		JMenu mnAjuda = new JMenu("Ajuda");
 		menuBar.add(mnAjuda);
 		JMenuItem miSobre = new JMenuItem("Sobre");
 		miSobre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "PetAmigo \nSistema de gestão veterinária" );
+				JOptionPane.showMessageDialog(null, "PetAmigo \nSistema de gestão veterinária");
 			}
 		});
 		mnAjuda.add(miSobre);
-		
+
+		// O caminho aponta para o pacote "Pictures" e para o nome exato da imagem
+		java.net.URL url = getClass().getResource("/Pictures/Pixel Faces - SHUAI NIE.jpg");
+
+		if (url != null) {
+			java.awt.Image icone = java.awt.Toolkit.getDefaultToolkit().getImage(url);
+			this.setIconImage(icone);
+		} else {
+			System.out.println("Erro: Não foi possível encontrar a imagem no pacote Pictures!");
+		}
 	}
 }

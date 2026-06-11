@@ -111,6 +111,14 @@ public class TelaAgendamentoConsulta extends JFrame {
 		});
 
 		preencherClientes();
+		java.net.URL url = getClass().getResource("/Pictures/Popcat Cartoon.jpg");
+
+		if (url != null) {
+			java.awt.Image icone = java.awt.Toolkit.getDefaultToolkit().getImage(url);
+			this.setIconImage(icone);
+		} else {
+			System.out.println("Erro: Não encontrei a nova imagem!");
+		}
 	}
 
 	private void preencherClientes() {
@@ -123,5 +131,6 @@ public class TelaAgendamentoConsulta extends JFrame {
 
 	public void agendarAtendimento() {
 		System.out.println("Botão agendar clicado! Data: " + txtData.getText() + " Hora: " + txtHora.getText());
+
 	}
 }

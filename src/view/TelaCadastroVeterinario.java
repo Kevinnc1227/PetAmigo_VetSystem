@@ -145,6 +145,15 @@ public class TelaCadastroVeterinario extends JFrame {
 				}
 			}
 		});
+		// É só trocar o final pelo nome da nova foto (ex: "foto_cliente.png")
+		java.net.URL url = getClass().getResource("/Pictures/download (1).jpg");
+
+		if (url != null) {
+			java.awt.Image icone = java.awt.Toolkit.getDefaultToolkit().getImage(url);
+			this.setIconImage(icone);
+		} else {
+			System.out.println("Erro: Não encontrei a nova imagem!");
+		}
 	}
 
 	/**

@@ -3,6 +3,7 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ConsultaDAO {
 	private Consulta consulta;
@@ -112,5 +113,10 @@ public class ConsultaDAO {
 
 	public String getMen() {
 		return men;
+	}
+
+	public List<Consulta> listarConsultas() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

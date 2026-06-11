@@ -12,7 +12,7 @@ public class Prontuario {
 		this.observacoes = "";
 	}
 
-	public Prontuario(String historico, String ultimaVacina, String observacoes , int idAnimal) {
+	public Prontuario(String historico, String ultimaVacina, String observacoes, int idAnimal) {
 		this.historico = historico;
 		this.ultimaVacina = ultimaVacina;
 		this.observacoes = observacoes;
@@ -51,11 +51,14 @@ public class Prontuario {
 		this.idAnimal = idAnimal;
 	}
 
+	public void adicionarEntrada(String texto) {
+		historico += "\n" + texto;
+	}
+
 	@Override
 	public String toString() {
 		return "Prontuario [historico=" + historico + ", ultimaVacina=" + ultimaVacina + ", observacoes=" + observacoes
 				+ ", idAnimal=" + idAnimal + "]";
 	}
-	
-	
+
 }
