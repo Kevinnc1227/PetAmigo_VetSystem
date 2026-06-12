@@ -117,30 +117,18 @@ public class TelaCadastroCliente extends JFrame {
 				cliente.setCpf(txtCpf.getText());
 				cliente.setEmail(txtEmail.getText());
 
-				BD bd = new BD();
+				ClienteDAO clienteDao = new ClienteDAO();
+				clienteDao.setCliente(cliente);
 
-				// Tentar conectar
-				if (bd.getConnection()) {
-					ClienteDAO clienteDao = new ClienteDAO();
-					clienteDao.setBd(bd);
-					clienteDao.setCliente(cliente);
+				// Executa a inclusão utilizando a nossa classe TipoOperacaoBD
+				String mensagemRetorno = clienteDao.atualizar(TipoOperacaoBD.INCLUSAO);
 
-					// Executa a inclusão utilizando a nossa classe TipoOperacaoBD
-					String mensagemRetorno = clienteDao.atualizar(TipoOperacaoBD.INCLUSAO);
+				// Exibe o veredito para o usuário
+				JOptionPane.showMessageDialog(null, mensagemRetorno, "Resultado", JOptionPane.INFORMATION_MESSAGE);
 
-					// Fecha a conexão com o banco de dados de forma segura
-					bd.close();
-
-					// Exibe o veredito para o usuário
-					JOptionPane.showMessageDialog(null, mensagemRetorno, "Resultado", JOptionPane.INFORMATION_MESSAGE);
-
-					// Limpa os campos da tela se der certo
-					if (mensagemRetorno.contains("sucesso")) {
-						limparCampos();
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Não foi possível conectar ao banco de dados!", "Erro",
-							JOptionPane.ERROR_MESSAGE);
+				// Limpa os campos da tela se der certo
+				if (mensagemRetorno.contains("sucesso")) {
+					limparCampos();
 				}
 			}
 		});

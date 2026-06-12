@@ -12,8 +12,8 @@ public class VeterinarioDAO implements OperacaoBD {
     private String sql, msg;
 
     public VeterinarioDAO() {
-        this.bd = null;
-        this.veterinario = null;
+        this.bd = new BD();
+        this.veterinario = new Veterinario();
     }
 
     public void setBd(BD bd) {
@@ -31,6 +31,10 @@ public class VeterinarioDAO implements OperacaoBD {
     // Método para buscar um veterinário no banco de dados usando o CRMV como chave.
     public boolean localizar() {
         sql = "SELECT * FROM veterinario WHERE crmv = ?";
+        if (!bd.getConnection()) {
+            msg = "Falha ao conectar ao banco de dados.";
+            return false;
+        }
         try {
             statement = bd.connection.prepareStatement(sql);
             statement.setString(1, veterinario.getCrmv());
@@ -41,22 +45,37 @@ public class VeterinarioDAO implements OperacaoBD {
                 veterinario.setCrmv(resultSet.getString("crmv"));
                 veterinario.setNome(resultSet.getString("nome"));
                 veterinario.setEmail(resultSet.getString("email"));
+                veterinario.setEspecialidade(resultSet.getString("especialidade"));
+                
+                String endStr = resultSet.getString("endereco");
+                veterinario.setEndereco(Endereco.parse(endStr));
+                
+                String telStr = resultSet.getString("telefone");
+                veterinario.setTelefone(Telefone.parse(telStr));
+                
                 return true;
             }
+            msg = "Veterinário não encontrado.";
             return false;
         } catch (SQLException erro) {
+            msg = "Erro ao localizar veterinário: " + erro.getMessage();
             return false;
+        } finally {
+            bd.close();
         }
     }
 
     // Método principal que decide se vai salvar, alterar ou apagar os dados no banco.
     public String atualizar(TipoOperacaoBD operacao) {
         msg = "Operação realizada com sucesso!";
+        if (!bd.getConnection()) {
+            return "Falha ao conectar ao banco de dados.";
+        }
         try {
             
             // Aqui faz a INCLUSÃO: Salva um novo veterinário no banco de dados.
             if (operacao == TipoOperacaoBD.INCLUSAO) {
-                sql = "INSERT INTO veterinario(crmv, nome, email, endereco, telefone) VALUES (?, ?, ?, ?, ?)";
+                sql = "INSERT INTO veterinario(crmv, nome, email, endereco, telefone, especialidade) VALUES (?, ?, ?, ?, ?, ?)";
                 statement = bd.connection.prepareStatement(sql);
 
                 statement.setString(1, veterinario.getCrmv());
@@ -64,17 +83,19 @@ public class VeterinarioDAO implements OperacaoBD {
                 statement.setString(3, veterinario.getEmail());
                 statement.setString(4, veterinario.getEndereco() != null ? veterinario.getEndereco().toString() : "");
                 statement.setString(5, veterinario.getTelefone() != null ? veterinario.getTelefone().toString() : "");
+                statement.setString(6, veterinario.getEspecialidade());
 
             // Aqui faz a ALTERAÇÃO: Atualiza os dados de um veterinário que já existe.
             } else if (operacao == TipoOperacaoBD.ALTERACAO) {
-                sql = "UPDATE veterinario SET nome = ?, email = ?, endereco = ?, telefone = ? WHERE crmv = ?";
+                sql = "UPDATE veterinario SET nome = ?, email = ?, endereco = ?, telefone = ?, especialidade = ? WHERE crmv = ?";
                 statement = bd.connection.prepareStatement(sql);
 
                 statement.setString(1, veterinario.getNome());
                 statement.setString(2, veterinario.getEmail());
                 statement.setString(3, veterinario.getEndereco() != null ? veterinario.getEndereco().toString() : "");
                 statement.setString(4, veterinario.getTelefone() != null ? veterinario.getTelefone().toString() : "");
-                statement.setString(5, veterinario.getCrmv());
+                statement.setString(5, veterinario.getEspecialidade());
+                statement.setString(6, veterinario.getCrmv());
 
             // Aqui faz a EXCLUSÃO: Apaga o veterinário do banco de dados usando o CRMV.
             } else if (operacao == TipoOperacaoBD.EXCLUSAO) {
@@ -89,6 +110,8 @@ public class VeterinarioDAO implements OperacaoBD {
             }
         } catch (SQLException erro) {
             msg = "Falha na operação - " + erro.toString();
+        } finally {
+            bd.close();
         }
 
         return msg;
