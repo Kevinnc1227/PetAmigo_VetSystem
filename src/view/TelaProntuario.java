@@ -114,67 +114,79 @@ public class TelaProntuario extends JFrame {
 		contentPane.add(btnLocalizar);
 
 		btnSalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					int idAnimal = Integer.parseInt(txtIdAnimal.getText());
+		    public void actionPerformed(ActionEvent e) {
+		        try {
+		            if (txtIdAnimal.getText().trim().isEmpty()) {
+		                JOptionPane.showMessageDialog(null, "Por favor, informe o ID do Animal.");
+		                return;
+		            }
 
-					Prontuario prontuario = new Prontuario();
+		            int idAnimal = Integer.parseInt(txtIdAnimal.getText().trim());
 
-					prontuario.setIdAnimal(idAnimal);
-					prontuario.setHistorico(txtHistorico.getText());
-					prontuario.setUltimaVacina(txtUltimaVacina.getText());
-					prontuario.setObservacoes(txtObservacoes.getText());
+		            // 1. Verifica se já existe um prontuário criando um buscador temporário
+		            Prontuario verifProntuario = new Prontuario();
+		            verifProntuario.setIdAnimal(idAnimal);
+		            ProntuarioDAO daoVerificar = new ProntuarioDAO();
+		            daoVerificar.setProntuario(verifProntuario);
+		            boolean existe = daoVerificar.localizar();
 
-					ProntuarioDAO dao = new ProntuarioDAO();
-					dao.setProntuario(prontuario);
+		            // 2. Prepara o objeto que vai de fato ser salvo/alterado
+		            Prontuario prontuario = new Prontuario();
+		            prontuario.setIdAnimal(idAnimal);
+		            prontuario.setHistorico(txtHistorico.getText());
+		            prontuario.setUltimaVacina(txtUltimaVacina.getText());
+		            prontuario.setObservacoes(txtObservacoes.getText());
 
-					// Verifica se já existe o prontuário do animal
-					boolean existe = dao.localizar();
+		            ProntuarioDAO daoSalvar = new ProntuarioDAO();
+		            daoSalvar.setProntuario(prontuario);
 
-					String mensagem = dao.atualizar(existe ? model.TipoOperacaoBD.ALTERACAO : model.TipoOperacaoBD.INCLUSAO);
-					JOptionPane.showMessageDialog(null, mensagem);
+		            // Se existe altera, senão inclui
+		            String mensagem = daoSalvar.atualizar(existe ? model.TipoOperacaoBD.ALTERACAO : model.TipoOperacaoBD.INCLUSAO);
+		            JOptionPane.showMessageDialog(null, mensagem);
 
-				} catch (Exception ex) {
-
-					JOptionPane.showMessageDialog(null, ex.getMessage());
-				}
-			}
+		        } catch (NumberFormatException ex) {
+		            JOptionPane.showMessageDialog(null, "O ID do animal precisa ser um número válido.");
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(null, "Erro na tela: " + ex.getMessage());
+		        }
+		    }
 		});
 
 		btnLocalizar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
+		    public void actionPerformed(ActionEvent e) {
+		        try {
+		            if (txtIdAnimal.getText().trim().isEmpty()) {
+		                JOptionPane.showMessageDialog(null, "Digite o ID do Animal para localizar.");
+		                return;
+		            }
 
-					int idAnimal = Integer.parseInt(txtIdAnimal.getText());
-					Prontuario prontuario = new Prontuario();
-					prontuario.setIdAnimal(idAnimal);
-					ProntuarioDAO dao = new ProntuarioDAO();
-					dao.setProntuario(prontuario);
-					if (dao.localizar()) {
-						txtHistorico.setText(prontuario.getHistorico());
-						txtUltimaVacina.setText(prontuario.getUltimaVacina());
-						txtObservacoes.setText(prontuario.getObservacoes());
-					} else {
-						JOptionPane.showMessageDialog(null, "Nenhum prontuário encontrado para o animal informado.");
-					}
+		            int idAnimal = Integer.parseInt(txtIdAnimal.getText().trim());
+		            Prontuario prontuario = new Prontuario();
+		            prontuario.setIdAnimal(idAnimal);
+		            
+		            ProntuarioDAO dao = new ProntuarioDAO();
+		            dao.setProntuario(prontuario);
+		            
+		            if (dao.localizar()) {
+		                // Recupera os dados preenchidos pelo banco dentro do objeto prontuario
+		                txtHistorico.setText(prontuario.getHistorico());
+		                txtUltimaVacina.setText(prontuario.getUltimaVacina());
+		                txtObservacoes.setText(prontuario.getObservacoes());
+		            } else {
+		                JOptionPane.showMessageDialog(null, "Nenhum prontuário encontrado para o ID " + idAnimal);
+		                // Limpa os campos se não achar
+		                txtHistorico.setText("");
+		                txtUltimaVacina.setText("");
+		                txtObservacoes.setText("");
+		            }
 
-				} catch (Exception ex) {
-
-					JOptionPane.showMessageDialog(null, ex.getMessage());
-				}
-			}
-
+		        } catch (NumberFormatException ex) {
+		            JOptionPane.showMessageDialog(null, "O ID do animal precisa ser um número inteiro.");
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(null, "Erro ao localizar: " + ex.getMessage());
+		        }
+		    }
 		});
-
-		setLocationRelativeTo(null);
-		// É só trocar o final pelo nome da nova foto (ex: "foto_cliente.png")
-		java.net.URL url = getClass().getResource("/Pictures/download (2).jpg");
-
-		if (url != null) {
-			java.awt.Image icone = java.awt.Toolkit.getDefaultToolkit().getImage(url);
-			this.setIconImage(icone);
-		} else {
-			System.out.println("Erro: Não encontrei a nova imagem!");
-		}
+		
 	}
 }
