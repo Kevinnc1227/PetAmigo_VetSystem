@@ -11,7 +11,7 @@ public class BD {
 	private final String DBNAME = "PetAmigo_VetSystem";
 	private final String URL = "jdbc:mysql://localhost:3306/" + DBNAME;
 	private final String LOGIN = "root";
-	private final String SENHA = "";
+	private final String SENHA = "10G@briel1001";
 
 	/**
 	 * metodo que faz conexao com o banco de dados retorna true se houve sucesso, ou

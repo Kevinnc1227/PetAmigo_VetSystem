@@ -3,6 +3,7 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsultaDAO implements OperacaoBD {
@@ -19,8 +20,8 @@ public class ConsultaDAO implements OperacaoBD {
 	}
 
 	public boolean localizar() {
-
-		this.sql = "SELECT * FROM consulta WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
+		// Ajustado para os nomes das colunas do banco (idAnimal)
+		this.sql = "SELECT * FROM Consulta WHERE data_consulta = ? AND hora_consulta = ? AND idAnimal = ?";
 
 		if (!bd.getConnection()) {
 			this.msg = "Falha ao conectar ao banco de dados.";
@@ -36,7 +37,6 @@ public class ConsultaDAO implements OperacaoBD {
 			this.resultSet = this.statement.executeQuery();
 
 			if (this.resultSet.next()) {
-				// Se achou, você pode preencher o valor e os objetos relacionados se necessário
 				consulta.setValor(this.resultSet.getFloat("valor"));
 				return true;
 			} else {
@@ -58,7 +58,8 @@ public class ConsultaDAO implements OperacaoBD {
 
 		try {
 			if (operacao == TipoOperacaoBD.INCLUSAO) {
-				this.sql = "INSERT INTO consulta (data_consulta, hora_consulta, animal_id, veterinario_crmv, valor) VALUES (?, ?, ?, ?, ?)";
+				// Ajustado para bater com as colunas: idAnimal, crmvVeterinario
+				this.sql = "INSERT INTO Consulta (data_consulta, hora_consulta, idAnimal, crmvVeterinario, valor) VALUES (?, ?, ?, ?, ?)";
 				this.statement = bd.connection.prepareStatement(this.sql);
 
 				this.statement.setString(1, consulta.getData().toString());
@@ -70,7 +71,7 @@ public class ConsultaDAO implements OperacaoBD {
 				this.statement.executeUpdate();
 				this.msg = "Consulta agendada com sucesso!";
 			} else if (operacao == TipoOperacaoBD.ALTERACAO) {
-				this.sql = "UPDATE consulta SET valor = ? WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
+				this.sql = "UPDATE Consulta SET valor = ? WHERE data_consulta = ? AND hora_consulta = ? AND idAnimal = ?";
 				this.statement = bd.connection.prepareStatement(this.sql);
 
 				this.statement.setFloat(1, consulta.getValor());
@@ -81,7 +82,7 @@ public class ConsultaDAO implements OperacaoBD {
 				this.statement.executeUpdate();
 				this.msg = "Consulta alterada com sucesso!";
 			} else if (operacao == TipoOperacaoBD.EXCLUSAO) {
-				this.sql = "DELETE FROM consulta WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
+				this.sql = "DELETE FROM Consulta WHERE data_consulta = ? AND hora_consulta = ? AND idAnimal = ?";
 				this.statement = bd.connection.prepareStatement(this.sql);
 
 				this.statement.setString(1, consulta.getData().toString());
@@ -116,11 +117,12 @@ public class ConsultaDAO implements OperacaoBD {
 	}
 
 	public List<Consulta> listarConsultas() {
-		List<Consulta> lista = new java.util.ArrayList<>();
-		this.sql = "SELECT c.data_consulta, c.hora_consulta, c.animal_id, a.nome AS animal_nome, c.veterinario_crmv, v.nome AS vet_nome, c.valor " +
-		           "FROM consulta c " +
-		           "INNER JOIN Animal a ON c.animal_id = a.id " +
-		           "INNER JOIN veterinario v ON c.veterinario_crmv = v.crmv";
+		List<Consulta> lista = new ArrayList<>();
+
+		// SQL totalmente mapeado para a estrutura correta do banco de dados
+		this.sql = "SELECT c.data_consulta, c.hora_consulta, c.idAnimal, a.nome AS animal_nome, c.crmvVeterinario, v.nome AS vet_nome, c.valor "
+				+ "FROM Consulta c " + "INNER JOIN Animal a ON c.idAnimal = a.id "
+				+ "INNER JOIN Veterinario v ON c.crmvVeterinario = v.crmv";
 
 		if (!bd.getConnection()) {
 			this.msg = "Falha ao conectar ao banco de dados.";
@@ -134,26 +136,36 @@ public class ConsultaDAO implements OperacaoBD {
 			while (this.resultSet.next()) {
 				Consulta c = new Consulta();
 
+				// Garantindo que os objetos internos não sejam nulos
+				Animal animal = new Animal();
+				Veterinario vet = new Veterinario();
+				c.setAnimal(animal);
+				c.setVet(vet);
+
+				// Tratamento e conversão da Data vinda do MySQL (Formato padrão: AAAA-MM-DD)
 				String dataStr = this.resultSet.getString("data_consulta");
-				if (dataStr != null && dataStr.contains("/")) {
-					String[] partes = dataStr.split("/");
+				if (dataStr != null && dataStr.contains("-")) {
+					String[] partes = dataStr.split("-");
 					if (partes.length == 3) {
-						c.setData(new Data(Integer.parseInt(partes[0]), Integer.parseInt(partes[1]), Integer.parseInt(partes[2])));
+						// Banco retorna [Ano, Mes, Dia] -> Classe Data espera (Dia, Mes, Ano)
+						c.setData(new Data(Integer.parseInt(partes[2]), Integer.parseInt(partes[1]),
+								Integer.parseInt(partes[0])));
 					}
 				}
 
+				// Tratamento e conversão da Hora vinda do MySQL (Formato padrão: HH:MM:SS)
 				String horaStr = this.resultSet.getString("hora_consulta");
 				if (horaStr != null && horaStr.contains(":")) {
 					String[] partes = horaStr.split(":");
-					if (partes.length == 2) {
+					if (partes.length >= 2) {
 						c.setHora(new Hora(Integer.parseInt(partes[0]), Integer.parseInt(partes[1])));
 					}
 				}
 
-				c.getAnimal().setId(this.resultSet.getInt("animal_id"));
+				c.getAnimal().setId(this.resultSet.getInt("idAnimal"));
 				c.getAnimal().setNome(this.resultSet.getString("animal_nome"));
 
-				c.getVet().setCrmv(this.resultSet.getString("veterinario_crmv"));
+				c.getVet().setCrmv(this.resultSet.getString("crmvVeterinario"));
 				c.getVet().setNome(this.resultSet.getString("vet_nome"));
 
 				c.setValor(this.resultSet.getFloat("valor"));
@@ -162,6 +174,7 @@ public class ConsultaDAO implements OperacaoBD {
 			}
 		} catch (SQLException e) {
 			this.msg = "Erro ao listar consultas: " + e.getMessage();
+			System.out.println(this.msg);
 		} finally {
 			bd.close();
 		}

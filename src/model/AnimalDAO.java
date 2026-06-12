@@ -3,6 +3,7 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class AnimalDAO implements OperacaoBD {
     private Animal animal;
@@ -107,4 +108,9 @@ public class AnimalDAO implements OperacaoBD {
     public String getMsg() {
         return msg;
     }
+
+	public List<Animal> listarPorCliente(String cpfCliente) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
