@@ -3,21 +3,28 @@ package model;
 public abstract class Pessoa {
 	private String nome;
 	private String email;
-	private Endereco endereco;
-	private Telefone telefone;
+	private String endereco;
+	private String telefone;
 
 	public Pessoa() {
 		this.nome = "";
 		this.email = "";
-		this.endereco = null;
-		this.telefone = null;
+		this.endereco = "";
+		this.telefone = "";
 	}
 
 	public Pessoa(String nome, String email) {
 		this.nome = nome;
 		this.email = email;
-		this.endereco = null;
-		this.telefone = null;
+		this.endereco = "";
+		this.telefone = "";
+	}
+
+	public Pessoa(String nome, String email, String endereco, String telefone) {
+		this.nome = nome;
+		this.email = email;
+		this.endereco = endereco;
+		this.telefone = telefone;
 	}
 
 	public String getNome() {
@@ -36,19 +43,19 @@ public abstract class Pessoa {
 		this.email = email;
 	}
 
-	public Endereco getEndereco() {
+	public String getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco endereco) {
+	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
 
-	public Telefone getTelefone() {
+	public String getTelefone() {
 		return telefone;
 	}
 
-	public void setTelefone(Telefone telefone) {
+	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
 }

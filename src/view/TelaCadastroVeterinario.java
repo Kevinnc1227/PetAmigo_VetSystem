@@ -26,6 +26,8 @@ public class TelaCadastroVeterinario extends JFrame {
 	private JTextField txtNome;
 	private JTextField txtCrmv;
 	private JTextField txtEmail;
+	private JTextField txtEndereco;
+	private JTextField txtTelefone;
 	private JButton btnSalvar;
 
 	/**
@@ -50,7 +52,7 @@ public class TelaCadastroVeterinario extends JFrame {
 	public TelaCadastroVeterinario() {
 		setTitle("PetAmigo - Cadastro de Veterinários");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 350);
+		setBounds(100, 100, 450, 380);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -95,10 +97,32 @@ public class TelaCadastroVeterinario extends JFrame {
 		contentPane.add(txtEmail);
 		txtEmail.setColumns(10);
 
+		// Campo Endereço
+		JLabel lblEndereco = new JLabel("Endereço:");
+		lblEndereco.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblEndereco.setBounds(30, 180, 150, 20);
+		contentPane.add(lblEndereco);
+
+		txtEndereco = new JTextField();
+		txtEndereco.setBounds(180, 180, 200, 22);
+		contentPane.add(txtEndereco);
+		txtEndereco.setColumns(10);
+
+		// Campo Telefone
+		JLabel lblTelefone = new JLabel("Telefone:");
+		lblTelefone.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTelefone.setBounds(30, 220, 150, 20);
+		contentPane.add(lblTelefone);
+
+		txtTelefone = new JTextField();
+		txtTelefone.setBounds(180, 220, 200, 22);
+		contentPane.add(txtTelefone);
+		txtTelefone.setColumns(10);
+
 		// Botão Salvar
 		btnSalvar = new JButton("Salvar");
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnSalvar.setBounds(150, 240, 120, 30);
+		btnSalvar.setBounds(150, 270, 120, 30);
 		contentPane.add(btnSalvar);
 
 		btnSalvar.addActionListener(new ActionListener() {
@@ -116,6 +140,8 @@ public class TelaCadastroVeterinario extends JFrame {
 				veterinario.setNome(txtNome.getText());
 				veterinario.setCrmv(txtCrmv.getText());
 				veterinario.setEmail(txtEmail.getText());
+				veterinario.setEndereco(txtEndereco.getText());
+				veterinario.setTelefone(txtTelefone.getText());
 
 				// 3. Persistência: Instancia o DAO com conexão autogerenciada
 				VeterinarioDAO veterinarioDao = new VeterinarioDAO();
@@ -151,6 +177,8 @@ public class TelaCadastroVeterinario extends JFrame {
 		txtNome.setText("");
 		txtCrmv.setText("");
 		txtEmail.setText("");
+		txtEndereco.setText("");
+		txtTelefone.setText("");
 	}
 
 }

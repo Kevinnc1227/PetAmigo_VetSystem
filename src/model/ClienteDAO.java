@@ -46,11 +46,8 @@ public class ClienteDAO implements OperacaoBD {
                 cliente.setNome(resultSet.getString("nome"));
                 cliente.setEmail(resultSet.getString("email"));
                 
-                String endStr = resultSet.getString("endereco");
-                cliente.setEndereco(Endereco.parse(endStr));
-                
-                String telStr = resultSet.getString("telefone");
-                cliente.setTelefone(Telefone.parse(telStr));
+                cliente.setEndereco(resultSet.getString("endereco"));
+                cliente.setTelefone(resultSet.getString("telefone"));
                 
                 return true;
             }
@@ -79,8 +76,8 @@ public class ClienteDAO implements OperacaoBD {
                 statement.setString(1, cliente.getCpf());
                 statement.setString(2, cliente.getNome());
                 statement.setString(3, cliente.getEmail());
-                statement.setString(4, cliente.getEndereco() != null ? cliente.getEndereco().toString() : "");
-                statement.setString(5, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
+                statement.setString(4, cliente.getEndereco() != null ? cliente.getEndereco() : "");
+                statement.setString(5, cliente.getTelefone() != null ? cliente.getTelefone() : "");
 
             // Aqui faz a ALTERAÇÃO: Atualiza os dados de um cliente que já existe.
             } else if (operacao == TipoOperacaoBD.ALTERACAO) {
@@ -89,8 +86,8 @@ public class ClienteDAO implements OperacaoBD {
 
                 statement.setString(1, cliente.getNome());
                 statement.setString(2, cliente.getEmail());
-                statement.setString(3, cliente.getEndereco() != null ? cliente.getEndereco().toString() : "");
-                statement.setString(4, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
+                statement.setString(3, cliente.getEndereco() != null ? cliente.getEndereco() : "");
+                statement.setString(4, cliente.getTelefone() != null ? cliente.getTelefone() : "");
                 statement.setString(5, cliente.getCpf());
 
             // Aqui faz a EXCLUSÃO: Apaga o cliente do banco de dados usando o CPF.

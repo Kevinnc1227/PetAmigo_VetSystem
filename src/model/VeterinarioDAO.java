@@ -47,11 +47,8 @@ public class VeterinarioDAO implements OperacaoBD {
                 veterinario.setEmail(resultSet.getString("email"));
                 veterinario.setEspecialidade(resultSet.getString("especialidade"));
                 
-                String endStr = resultSet.getString("endereco");
-                veterinario.setEndereco(Endereco.parse(endStr));
-                
-                String telStr = resultSet.getString("telefone");
-                veterinario.setTelefone(Telefone.parse(telStr));
+                veterinario.setEndereco(resultSet.getString("endereco"));
+                veterinario.setTelefone(resultSet.getString("telefone"));
                 
                 return true;
             }
@@ -81,8 +78,8 @@ public class VeterinarioDAO implements OperacaoBD {
                 statement.setString(1, veterinario.getCrmv());
                 statement.setString(2, veterinario.getNome());
                 statement.setString(3, veterinario.getEmail());
-                statement.setString(4, veterinario.getEndereco() != null ? veterinario.getEndereco().toString() : "");
-                statement.setString(5, veterinario.getTelefone() != null ? veterinario.getTelefone().toString() : "");
+                statement.setString(4, veterinario.getEndereco() != null ? veterinario.getEndereco() : "");
+                statement.setString(5, veterinario.getTelefone() != null ? veterinario.getTelefone() : "");
                 statement.setString(6, veterinario.getEspecialidade());
 
             // Aqui faz a ALTERAÇÃO: Atualiza os dados de um veterinário que já existe.
@@ -92,8 +89,8 @@ public class VeterinarioDAO implements OperacaoBD {
 
                 statement.setString(1, veterinario.getNome());
                 statement.setString(2, veterinario.getEmail());
-                statement.setString(3, veterinario.getEndereco() != null ? veterinario.getEndereco().toString() : "");
-                statement.setString(4, veterinario.getTelefone() != null ? veterinario.getTelefone().toString() : "");
+                statement.setString(3, veterinario.getEndereco() != null ? veterinario.getEndereco() : "");
+                statement.setString(4, veterinario.getTelefone() != null ? veterinario.getTelefone() : "");
                 statement.setString(5, veterinario.getEspecialidade());
                 statement.setString(6, veterinario.getCrmv());
 

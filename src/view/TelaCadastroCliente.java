@@ -27,6 +27,8 @@ public class TelaCadastroCliente extends JFrame {
 	private JTextField txtNome;
 	private JTextField txtCpf;
 	private JTextField txtEmail;
+	private JTextField txtEndereco;
+	private JTextField txtTelefone;
 	private JButton btnSalvar;
 
 	/**
@@ -51,7 +53,7 @@ public class TelaCadastroCliente extends JFrame {
 	public TelaCadastroCliente() {
 		setTitle("PetAmigo - Cadastro de Clientes");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Evita fechar o programa inteiro ao fechar só a tela
-		setBounds(100, 100, 450, 350);
+		setBounds(100, 100, 450, 380);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -95,10 +97,32 @@ public class TelaCadastroCliente extends JFrame {
 		contentPane.add(txtEmail);
 		txtEmail.setColumns(10);
 
+		// Campo Endereço
+		JLabel lblEndereco = new JLabel("Endereço:");
+		lblEndereco.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblEndereco.setBounds(30, 180, 150, 20);
+		contentPane.add(lblEndereco);
+
+		txtEndereco = new JTextField();
+		txtEndereco.setBounds(180, 180, 200, 22);
+		contentPane.add(txtEndereco);
+		txtEndereco.setColumns(10);
+
+		// Campo Telefone
+		JLabel lblTelefone = new JLabel("Telefone:");
+		lblTelefone.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTelefone.setBounds(30, 220, 150, 20);
+		contentPane.add(lblTelefone);
+
+		txtTelefone = new JTextField();
+		txtTelefone.setBounds(180, 220, 200, 22);
+		contentPane.add(txtTelefone);
+		txtTelefone.setColumns(10);
+
 		// Botão Salvar (Com os Eventos Conectados)
 		btnSalvar = new JButton("Salvar");
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnSalvar.setBounds(150, 240, 120, 30);
+		btnSalvar.setBounds(150, 270, 120, 30);
 		contentPane.add(btnSalvar);
 
 		btnSalvar.addActionListener(new ActionListener() {
@@ -116,6 +140,8 @@ public class TelaCadastroCliente extends JFrame {
 				cliente.setNome(txtNome.getText());
 				cliente.setCpf(txtCpf.getText());
 				cliente.setEmail(txtEmail.getText());
+				cliente.setEndereco(txtEndereco.getText());
+				cliente.setTelefone(txtTelefone.getText());
 
 				ClienteDAO clienteDao = new ClienteDAO();
 				clienteDao.setCliente(cliente);
@@ -147,5 +173,7 @@ public class TelaCadastroCliente extends JFrame {
 		txtNome.setText("");
 		txtCpf.setText("");
 		txtEmail.setText("");
+		txtEndereco.setText("");
+		txtTelefone.setText("");
 	}
 }
