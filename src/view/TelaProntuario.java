@@ -127,7 +127,11 @@ public class TelaProntuario extends JFrame {
 
 					ProntuarioDAO dao = new ProntuarioDAO();
 					dao.setProntuario(prontuario);
-					String mensagem = dao.atualizar(1);
+
+					// Verifica se já existe o prontuário do animal
+					boolean existe = dao.localizar();
+
+					String mensagem = dao.atualizar(existe ? model.TipoOperacaoBD.ALTERACAO : model.TipoOperacaoBD.INCLUSAO);
 					JOptionPane.showMessageDialog(null, mensagem);
 
 				} catch (Exception ex) {

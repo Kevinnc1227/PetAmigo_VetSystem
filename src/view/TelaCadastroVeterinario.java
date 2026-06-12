@@ -117,31 +117,19 @@ public class TelaCadastroVeterinario extends JFrame {
 				veterinario.setCrmv(txtCrmv.getText());
 				veterinario.setEmail(txtEmail.getText());
 
-				// 3. Gerenciamento de Conexão: Instancia o controlador de banco de dados
-				BD bd = new BD();
+				// 3. Persistência: Instancia o DAO com conexão autogerenciada
+				VeterinarioDAO veterinarioDao = new VeterinarioDAO();
+				veterinarioDao.setVeterinario(veterinario);
 
-				// 4. Etapa de Persistência: Abre a conexão de forma segura
-				if (bd.getConnection()) {
-					VeterinarioDAO veterinarioDao = new VeterinarioDAO();
-					veterinarioDao.setBd(bd);
-					veterinarioDao.setVeterinario(veterinario);
+				// Dispara a query através da estrutura Enum
+				String mensagemRetorno = veterinarioDao.atualizar(TipoOperacaoBD.INCLUSAO);
 
-					// Dispara a query através da estrutura Enum que limpamos
-					String mensagemRetorno = veterinarioDao.atualizar(TipoOperacaoBD.INCLUSAO);
+				// 4. Veredito: Exibe o JOptionPane de retorno para o usuário
+				JOptionPane.showMessageDialog(null, mensagemRetorno, "Resultado", JOptionPane.INFORMATION_MESSAGE);
 
-					// 5. Etapa de Encerramento: Garante o fechamento da conexão aberta pela View
-					bd.close();
-
-					// 6. Veredito: Exibe o JOptionPane de retorno para o usuário
-					JOptionPane.showMessageDialog(null, mensagemRetorno, "Resultado", JOptionPane.INFORMATION_MESSAGE);
-
-					// Limpa os campos se gravou perfeitamente
-					if (mensagemRetorno.contains("sucesso")) {
-						limparCampos();
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Não foi possível conectar ao banco de dados!", "Erro",
-							JOptionPane.ERROR_MESSAGE);
+				// Limpa os campos se gravou perfeitamente
+				if (mensagemRetorno.contains("sucesso")) {
+					limparCampos();
 				}
 			}
 		});

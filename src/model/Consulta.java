@@ -75,8 +75,7 @@ public class Consulta {
 		System.out.println("Atendimento realizado para o animal: " + this.animal);
 	}
 
-	public Animal getVeterinario() {
-		// TODO Auto-generated method stub
-		return null;
+	public Veterinario getVeterinario() {
+		return this.vet;
 	}
 }

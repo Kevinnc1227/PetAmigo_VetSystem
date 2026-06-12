@@ -116,7 +116,56 @@ public class ConsultaDAO implements OperacaoBD {
 	}
 
 	public List<Consulta> listarConsultas() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Consulta> lista = new java.util.ArrayList<>();
+		this.sql = "SELECT c.data_consulta, c.hora_consulta, c.animal_id, a.nome AS animal_nome, c.veterinario_crmv, v.nome AS vet_nome, c.valor " +
+		           "FROM consulta c " +
+		           "INNER JOIN Animal a ON c.animal_id = a.id " +
+		           "INNER JOIN veterinario v ON c.veterinario_crmv = v.crmv";
+
+		if (!bd.getConnection()) {
+			this.msg = "Falha ao conectar ao banco de dados.";
+			return lista;
+		}
+
+		try {
+			this.statement = bd.connection.prepareStatement(this.sql);
+			this.resultSet = this.statement.executeQuery();
+
+			while (this.resultSet.next()) {
+				Consulta c = new Consulta();
+
+				String dataStr = this.resultSet.getString("data_consulta");
+				if (dataStr != null && dataStr.contains("/")) {
+					String[] partes = dataStr.split("/");
+					if (partes.length == 3) {
+						c.setData(new Data(Integer.parseInt(partes[0]), Integer.parseInt(partes[1]), Integer.parseInt(partes[2])));
+					}
+				}
+
+				String horaStr = this.resultSet.getString("hora_consulta");
+				if (horaStr != null && horaStr.contains(":")) {
+					String[] partes = horaStr.split(":");
+					if (partes.length == 2) {
+						c.setHora(new Hora(Integer.parseInt(partes[0]), Integer.parseInt(partes[1])));
+					}
+				}
+
+				c.getAnimal().setId(this.resultSet.getInt("animal_id"));
+				c.getAnimal().setNome(this.resultSet.getString("animal_nome"));
+
+				c.getVet().setCrmv(this.resultSet.getString("veterinario_crmv"));
+				c.getVet().setNome(this.resultSet.getString("vet_nome"));
+
+				c.setValor(this.resultSet.getFloat("valor"));
+
+				lista.add(c);
+			}
+		} catch (SQLException e) {
+			this.msg = "Erro ao listar consultas: " + e.getMessage();
+		} finally {
+			bd.close();
+		}
+
+		return lista;
 	}
 }

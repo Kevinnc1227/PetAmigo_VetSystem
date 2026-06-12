@@ -58,6 +58,39 @@ public class Endereco {
 
 	public String toString() {
 		return "Rua " + this.getlogradouro() + ", nº" + this.getNumero() + ", " + this.getBairro() + ", "
-				+ this.getCidade();
+			+ this.getCidade();
+	}
+
+	public static Endereco parse(String str) {
+		if (str == null || str.trim().isEmpty()) {
+			return new Endereco();
+		}
+		String logradouro = "", numero = "", bairro = "", cidade = "";
+		try {
+			String[] parts = str.split(", ");
+			if (parts.length >= 1) {
+				logradouro = parts[0];
+				if (logradouro.startsWith("Rua ")) {
+					logradouro = logradouro.substring(4);
+				}
+			}
+			if (parts.length >= 2) {
+				numero = parts[1];
+				if (numero.startsWith("nº")) {
+					numero = numero.substring(2);
+				} else if (numero.startsWith("n°")) {
+					numero = numero.substring(2);
+				}
+			}
+			if (parts.length >= 3) {
+				bairro = parts[2];
+			}
+			if (parts.length >= 4) {
+				cidade = parts[3];
+			}
+		} catch (Exception e) {
+			logradouro = str;
+		}
+		return new Endereco(logradouro, numero, bairro, cidade);
 	}
 }

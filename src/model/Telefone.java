@@ -34,4 +34,23 @@ public class Telefone {
 	public String toString() {
 		return this.getDdd() + " " + this.getNumero();
 	}
+
+	public static Telefone parse(String str) {
+		if (str == null || str.trim().isEmpty()) {
+			return new Telefone();
+		}
+		String ddd = "", numero = "";
+		try {
+			String[] parts = str.trim().split(" ", 2);
+			if (parts.length >= 1) {
+				ddd = parts[0];
+			}
+			if (parts.length >= 2) {
+				numero = parts[1];
+			}
+		} catch (Exception e) {
+			numero = str;
+		}
+		return new Telefone(ddd, numero);
+	}
 }

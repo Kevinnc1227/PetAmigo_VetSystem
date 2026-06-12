@@ -12,8 +12,8 @@ public class ClienteDAO implements OperacaoBD {
     private String sql, msg;
 
     public ClienteDAO() {
-        this.bd = null;
-        this.cliente = null;
+        this.bd = new BD();
+        this.cliente = new Cliente();
     }
 
     public void setBd(BD bd) {
@@ -31,6 +31,10 @@ public class ClienteDAO implements OperacaoBD {
     // Método para buscar um cliente no banco de dados usando o CPF como chave.
     public boolean localizar() {
         sql = "SELECT * FROM cliente WHERE cpf = ?";
+        if (!bd.getConnection()) {
+            msg = "Falha ao conectar ao banco de dados.";
+            return false;
+        }
         try {
             statement = bd.connection.prepareStatement(sql);
             statement.setString(1, cliente.getCpf());
@@ -41,19 +45,32 @@ public class ClienteDAO implements OperacaoBD {
                 cliente.setCpf(resultSet.getString("cpf"));
                 cliente.setNome(resultSet.getString("nome"));
                 cliente.setEmail(resultSet.getString("email"));
+                
+                String endStr = resultSet.getString("endereco");
+                cliente.setEndereco(Endereco.parse(endStr));
+                
+                String telStr = resultSet.getString("telefone");
+                cliente.setTelefone(Telefone.parse(telStr));
+                
                 return true;
             }
+            msg = "Cliente não encontrado.";
             return false;
         } catch (SQLException erro) {
+            msg = "Erro ao localizar cliente: " + erro.getMessage();
             return false;
+        } finally {
+            bd.close();
         }
     }
 
     // Método principal que decide se vai salvar, alterar ou apagar os dados no banco.
     public String atualizar(TipoOperacaoBD operacao) {
         msg = "Operação realizada com sucesso!";
+        if (!bd.getConnection()) {
+            return "Falha ao conectar ao banco de dados.";
+        }
         try {
-            
             // Aqui faz a INCLUSÃO: Salva um novo cliente no banco de dados.
             if (operacao == TipoOperacaoBD.INCLUSAO) {
                 sql = "INSERT INTO cliente(cpf, nome, email, endereco, telefone) VALUES (?, ?, ?, ?, ?)";
@@ -89,6 +106,8 @@ public class ClienteDAO implements OperacaoBD {
             }
         } catch (SQLException erro) {
             msg = "Falha na operação - " + erro.toString();
+        } finally {
+            bd.close();
         }
         
         return msg;

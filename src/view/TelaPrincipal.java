@@ -70,6 +70,12 @@ public class TelaPrincipal extends JFrame {
 		mnCadastro.add(miCliente);
 
 		JMenuItem miVeterinario = new JMenuItem("Veterinário");
+		miVeterinario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaCadastroVeterinario telaCadastVet = new TelaCadastroVeterinario();
+				telaCadastVet.setVisible(true);
+			}
+		});
 		mnCadastro.add(miVeterinario);
 
 		JMenu mnConsulta = new JMenu("Consultas");
