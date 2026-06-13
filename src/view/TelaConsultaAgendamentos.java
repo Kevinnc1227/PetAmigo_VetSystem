@@ -11,10 +11,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import model.Consulta;
 import model.ConsultaDAO;
 
 public class TelaConsultaAgendamentos extends JFrame {
+	private static final long serialVersionUID = 1L;
 
 	private JTable tblConsultas;
 	private JScrollPane scrollPane;
@@ -59,7 +62,12 @@ public class TelaConsultaAgendamentos extends JFrame {
 
 		btnAtualizar = new JButton("Atualizar");
 
-		btnAtualizar.addActionListener(_ -> carregarConsultas());
+		btnAtualizar.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        carregarConsultas();
+    }
+});
 
 		JPanel painelInferior = new JPanel();
 		painelInferior.add(btnAtualizar);

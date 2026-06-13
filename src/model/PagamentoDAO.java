@@ -18,6 +18,10 @@ public class PagamentoDAO implements OperacaoBD {
 	}
 
 	public boolean localizar() {
+		if (pagamento == null) {
+			this.msg = "O objeto pagamento está nulo.";
+			return false;
+		}
 		this.sql = "SELECT * FROM pagamento WHERE valorTotal = ?";
 
 		if (!bd.getConnection()) {
@@ -50,6 +54,9 @@ public class PagamentoDAO implements OperacaoBD {
 	}
 
 	public String atualizar(TipoOperacaoBD operacao) {
+		if (pagamento == null) {
+			return "O objeto pagamento está nulo.";
+		}
 		if (!bd.getConnection()) {
 			return "Falha ao conectar ao banco de dados.";
 		}

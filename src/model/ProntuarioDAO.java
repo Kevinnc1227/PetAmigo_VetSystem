@@ -38,7 +38,7 @@ public class ProntuarioDAO implements OperacaoBD {
         }
         
         try {
-            bd.getConnection();
+            if (!bd.getConnection()) { this.msg = "Falha ao conectar ao banco de dados."; return false; }
             this.statement = bd.connection.prepareStatement(sql);
             this.statement.setInt(1, prontuario.getIdAnimal());
             this.resultSet = this.statement.executeQuery();
@@ -67,8 +67,10 @@ public class ProntuarioDAO implements OperacaoBD {
             return "O objeto prontuário está nulo.";
         }
         
+        if (!bd.getConnection()) {
+            return "Falha ao conectar ao banco de dados.";
+        }
         try {
-            bd.getConnection();
             if (operacao == TipoOperacaoBD.INCLUSAO) {
                 this.sql = "INSERT INTO Prontuario (idAnimal, historico, ultimaVacina, observacoes) VALUES (?, ?, ?, ?)";
                 this.statement = bd.connection.prepareStatement(sql);
