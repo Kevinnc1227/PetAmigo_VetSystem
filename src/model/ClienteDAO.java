@@ -30,6 +30,10 @@ public class ClienteDAO implements OperacaoBD {
 
     // Método para buscar um cliente no banco de dados usando o CPF como chave.
     public boolean localizar() {
+        if (cliente == null || cliente.getCpf() == null || cliente.getCpf().trim().isEmpty()) {
+            msg = "CPF do cliente não informado.";
+            return false;
+        }
         sql = "SELECT * FROM cliente WHERE cpf = ?";
         if (!bd.getConnection()) {
             msg = "Falha ao conectar ao banco de dados.";
@@ -108,5 +112,31 @@ public class ClienteDAO implements OperacaoBD {
         }
         
         return msg;
+    }
+
+    public java.util.List<Cliente> listarClientes() {
+        java.util.List<Cliente> lista = new java.util.ArrayList<Cliente>();
+        String sqlListar = "SELECT * FROM cliente ORDER BY nome";
+        if (!bd.getConnection()) {
+            return lista;
+        }
+        try {
+            statement = bd.connection.prepareStatement(sqlListar);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Cliente c = new Cliente();
+                c.setCpf(resultSet.getString("cpf"));
+                c.setNome(resultSet.getString("nome"));
+                c.setEmail(resultSet.getString("email"));
+                c.setEndereco(resultSet.getString("endereco"));
+                c.setTelefone(resultSet.getString("telefone"));
+                lista.add(c);
+            }
+        } catch (SQLException erro) {
+            msg = "Erro ao listar clientes: " + erro.getMessage();
+        } finally {
+            bd.close();
+        }
+        return lista;
     }
 }

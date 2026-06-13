@@ -18,10 +18,17 @@ public class AnimalDAO implements OperacaoBD {
     }
 
     public boolean localizar() {
+        if (animal == null || animal.getId() <= 0) {
+            this.msg = "ID do animal não informado ou inválido.";
+            return false;
+        }
         this.sql = "SELECT * FROM Animal WHERE id = ?";
         try {
 
-            bd.getConnection();
+            if (!bd.getConnection()) {
+                this.msg = "Falha ao conectar ao banco de dados.";
+                return false;
+            }
             this.statement = bd.connection.prepareStatement(this.sql);
             this.statement.setInt(1, animal.getId());
             this.resultSet = this.statement.executeQuery();
@@ -45,8 +52,13 @@ public class AnimalDAO implements OperacaoBD {
         }
     }
     public String atualizar(TipoOperacaoBD operacao) {
+        if (animal == null) {
+            return "O objeto animal está nulo.";
+        }
+        if (!bd.getConnection()) {
+            return "Falha ao conectar ao banco de dados.";
+        }
         try {
-            bd.getConnection();
             if (operacao == TipoOperacaoBD.INCLUSAO) { // INCLUSAO
 
                 this.sql =
@@ -106,5 +118,37 @@ public class AnimalDAO implements OperacaoBD {
 
     public String getMsg() {
         return msg;
+    }
+
+    public java.util.List<Animal> listarAnimais() {
+        java.util.List<Animal> lista = new java.util.ArrayList<Animal>();
+        this.sql = "SELECT * FROM Animal ORDER BY nome";
+        if (!bd.getConnection()) {
+            return lista;
+        }
+        try {
+            this.statement = bd.connection.prepareStatement(this.sql);
+            this.resultSet = this.statement.executeQuery();
+            while (this.resultSet.next()) {
+                Animal a = new Animal();
+                a.setId(this.resultSet.getInt("id"));
+                a.setNome(this.resultSet.getString("nome"));
+                String esp = this.resultSet.getString("especie");
+                if (esp != null) {
+                    try {
+                        a.setEspecie(TipoAnimal.valueOf(esp.toUpperCase()));
+                    } catch (IllegalArgumentException ex) {
+                        // Ignore
+                    }
+                }
+                a.setPeso(this.resultSet.getFloat("peso"));
+                lista.add(a);
+            }
+        } catch (SQLException erro) {
+            this.msg = "Erro ao listar animais: " + erro.getMessage();
+        } finally {
+            bd.close();
+        }
+        return lista;
     }
 }

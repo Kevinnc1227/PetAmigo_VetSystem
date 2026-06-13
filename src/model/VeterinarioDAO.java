@@ -30,6 +30,10 @@ public class VeterinarioDAO implements OperacaoBD {
 
     // Método para buscar um veterinário no banco de dados usando o CRMV como chave.
     public boolean localizar() {
+        if (veterinario == null || veterinario.getCrmv() == null || veterinario.getCrmv().trim().isEmpty()) {
+            msg = "CRMV do veterinário não informado.";
+            return false;
+        }
         sql = "SELECT * FROM veterinario WHERE crmv = ?";
         if (!bd.getConnection()) {
             msg = "Falha ao conectar ao banco de dados.";
@@ -112,5 +116,32 @@ public class VeterinarioDAO implements OperacaoBD {
         }
 
         return msg;
+    }
+
+    public java.util.List<Veterinario> listarVeterinarios() {
+        java.util.List<Veterinario> lista = new java.util.ArrayList<Veterinario>();
+        String sqlListar = "SELECT * FROM veterinario ORDER BY nome";
+        if (!bd.getConnection()) {
+            return lista;
+        }
+        try {
+            statement = bd.connection.prepareStatement(sqlListar);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Veterinario v = new Veterinario();
+                v.setCrmv(resultSet.getString("crmv"));
+                v.setNome(resultSet.getString("nome"));
+                v.setEmail(resultSet.getString("email"));
+                v.setEndereco(resultSet.getString("endereco"));
+                v.setTelefone(resultSet.getString("telefone"));
+                v.setEspecialidade(resultSet.getString("especialidade"));
+                lista.add(v);
+            }
+        } catch (SQLException erro) {
+            msg = "Erro ao listar veterinários: " + erro.getMessage();
+        } finally {
+            bd.close();
+        }
+        return lista;
     }
 }
