@@ -5,19 +5,23 @@ public class Prontuario {
 	private String historico;
 	private String ultimaVacina;
 	private String observacoes;
-	private int idAnimal;
+	private float peso;
+	private Animal animal;
 
 	public Prontuario() {
 		this.historico = "";
 		this.ultimaVacina = "";
 		this.observacoes = "";
+		this.peso = -1;
+		this.animal = new Animal();
 	}
 
-	public Prontuario(String historico, String ultimaVacina, String observacoes, int idAnimal) {
+	public Prontuario(String historico, String ultimaVacina, String observacoes, Animal animal , float peso) {
 		this.historico = historico;
 		this.ultimaVacina = ultimaVacina;
 		this.observacoes = observacoes;
-		this.idAnimal = idAnimal;
+		this.animal = animal;
+		this.peso = peso;
 	}
 
 	public String getHistorico() {
@@ -39,27 +43,32 @@ public class Prontuario {
 	public String getObservacoes() {
 		return observacoes;
 	}
-
 	public void setObservacoes(String observacoes) {
 		this.observacoes = observacoes;
 	}
 
-	public int getIdAnimal() {
-		return idAnimal;
+	public Animal getAnimal() {
+		return animal;
 	}
-
-	public void setIdAnimal(int idAnimal) {
-		this.idAnimal = idAnimal;
+	public void setAnimal(Animal animal) {
+		this.animal = animal;
 	}
 
 	public void adicionarEntrada(String texto) {
 		historico += "\n" + texto;
 	}
+	public float getPeso() {
+		return peso;
+	}
+
+	public void setPeso(float peso) {
+		this.peso = peso;
+	}
 
 	@Override
 	public String toString() {
 		return "Prontuario [historico=" + historico + ", ultimaVacina=" + ultimaVacina + ", observacoes=" + observacoes
-				+ ", idAnimal=" + idAnimal + "]";
+				+ ", animal=" + animal + " Peso=" + peso + "]";
 	}
 
 }
