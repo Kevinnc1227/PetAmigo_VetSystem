@@ -4,6 +4,9 @@ import javax.swing.JOptionPane;
 
 import model.Animal;
 import model.AnimalDAO;
+import model.Cliente;
+import model.ClienteDAO;
+
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -24,13 +27,11 @@ public class TelaCadastroAnimal extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtNome;
-	private JTextField txtPeso;
+	private JTextField txtCpfCliente;
+
 	private JComboBox<TipoAnimal> cbxAnimal;
 	private JButton btnSalvar;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -47,7 +48,8 @@ public class TelaCadastroAnimal extends JFrame {
 	public TelaCadastroAnimal() {
 		setTitle("PetAmigo - Cadastro Animal");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 350);
+		setBounds(100, 100, 450, 400);
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -58,96 +60,116 @@ public class TelaCadastroAnimal extends JFrame {
 		lblTitulo.setBounds(110, 11, 220, 25);
 		contentPane.add(lblTitulo);
 
-		JLabel lblNome = new JLabel("Nome Completo");
+		JLabel lblNome = new JLabel("Nome ");
 		lblNome.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNome.setBounds(30, 60, 150, 20);
+		lblNome.setBounds(30, 74, 150, 20);
 		contentPane.add(lblNome);
 
 		txtNome = new JTextField();
 		txtNome.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtNome.setColumns(10);
-		txtNome.setBounds(180, 60, 200, 22);
+		txtNome.setBounds(180, 74, 200, 22);
 		contentPane.add(txtNome);
 
-		JLabel lblPeso = new JLabel("Peso(Kg)");
-		lblPeso.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblPeso.setBounds(30, 100, 150, 20);
-		contentPane.add(lblPeso);
+	
 
-		txtPeso = new JTextField();
-		txtPeso.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtPeso.setColumns(10);
-		txtPeso.setBounds(180, 100, 200, 22);
-		contentPane.add(txtPeso);
+		// NOVO CAMPO
+		JLabel lblCpfCliente = new JLabel("CPF do Dono");
+		lblCpfCliente.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblCpfCliente.setBounds(30, 120, 150, 20);
+		contentPane.add(lblCpfCliente);
+
+		txtCpfCliente = new JTextField();
+		txtCpfCliente.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtCpfCliente.setColumns(10);
+		txtCpfCliente.setBounds(180, 120, 200, 22);
+		contentPane.add(txtCpfCliente);
 
 		JLabel lblAnimal = new JLabel("Selecione o Animal:");
 		lblAnimal.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblAnimal.setBounds(30, 140, 150, 20);
+		lblAnimal.setBounds(30, 167, 150, 20);
 		contentPane.add(lblAnimal);
 
 		cbxAnimal = new JComboBox<TipoAnimal>();
 		cbxAnimal.setFont(new Font("Tahoma", Font.BOLD, 10));
-		cbxAnimal.setToolTipText("");
 		cbxAnimal.setModel(new DefaultComboBoxModel<TipoAnimal>(TipoAnimal.values()));
 		cbxAnimal.setSelectedIndex(-1);
-		cbxAnimal.setBounds(180, 140, 100, 20);
+		cbxAnimal.setBounds(180, 167, 200, 22);
 		contentPane.add(cbxAnimal);
 
 		btnSalvar = new JButton("Salvar");
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnSalvar.setBounds(150, 240, 120, 30);
+		btnSalvar.setBounds(147, 233, 120, 30);
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
+			    try {
 
-					if (txtNome.getText().trim().isEmpty()) {
-						JOptionPane.showMessageDialog(null, "Informe o nome do animal.");
-						return;
-					}
+			        if (txtNome.getText().trim().isEmpty()) {
+			            JOptionPane.showMessageDialog(null, "Informe o nome do animal.");
+			            return;
+			        }
 
-					if (cbxAnimal.getSelectedItem() == null) {
-						JOptionPane.showMessageDialog(null, "Selecione a espécie.");
-						return;
-					}
+			        if (txtCpfCliente.getText().trim().isEmpty()) {
+			            JOptionPane.showMessageDialog(null,"Informe o CPF do dono.");
+			            return;
+			        }
 
-					String nome = txtNome.getText();
+			        if (cbxAnimal.getSelectedItem() == null) {
+			            JOptionPane.showMessageDialog(null,"Selecione a espécie.");
+			            return;
+			        }
+			        String nome = txtNome.getText();
+			        TipoAnimal especie =(TipoAnimal) cbxAnimal.getSelectedItem();
 
-					float peso = Float.parseFloat(txtPeso.getText());
+			        
+			        Cliente cliente = new Cliente();
+			        cliente.setCpf(txtCpfCliente.getText());
+			        ClienteDAO clienteDAO = new ClienteDAO();
+			        clienteDAO.setCliente(cliente);
 
-					TipoAnimal especie = (TipoAnimal) cbxAnimal.getSelectedItem();
+			        if (!clienteDAO.localizar()) {
+			            JOptionPane.showMessageDialog(
+			                    null, "Cliente não encontrado."
+			            );
+			            return;
+			        }
+			        cliente = clienteDAO.getCliente();
+			        Animal animal = new Animal(nome, especie);
+			        animal.setCliente(cliente);
+			        AnimalDAO dao = new AnimalDAO();
+			        dao.setAnimal(animal);
 
-					Animal animal = new Animal(nome, especie, peso);
+			        String mensagem = dao.atualizar(model.TipoOperacaoBD.INCLUSAO);
+			        JOptionPane.showMessageDialog(null, mensagem);
+			        txtNome.setText("");
+			        txtCpfCliente.setText("");
+			        cbxAnimal.setSelectedIndex(-1);
 
-					AnimalDAO dao = new AnimalDAO();
-					dao.setAnimal(animal);
+			    }
 
-					String mensagem = dao.atualizar(model.TipoOperacaoBD.INCLUSAO);
-
-					JOptionPane.showMessageDialog(null, mensagem);
-
-					txtNome.setText("");
-					txtPeso.setText("");
-					cbxAnimal.setSelectedIndex(-1);
-
-				} catch (NumberFormatException ex) {
-
-					JOptionPane.showMessageDialog(null, "Peso inválido.");
-
-				} catch (Exception ex) {
-
-					JOptionPane.showMessageDialog(null, ex.getMessage());
-				}
+			    catch (Exception ex) {
+			        JOptionPane.showMessageDialog(
+			                null,
+			                "Erro: " + ex.getMessage()
+			        );
+			    }
 			}
 		});
 		contentPane.add(btnSalvar);
-		// É só trocar o final pelo nome da nova foto (ex: "foto_cliente.png")
-		java.net.URL url = getClass().getResource("/Pictures/banana cat.jpg");
+
+		java.net.URL url =
+				getClass().getResource("/Pictures/banana cat.jpg");
 
 		if (url != null) {
-			java.awt.Image icone = java.awt.Toolkit.getDefaultToolkit().getImage(url);
+			java.awt.Image icone =
+					java.awt.Toolkit.getDefaultToolkit()
+							.getImage(url);
 			this.setIconImage(icone);
+
 		} else {
-			System.out.println("Erro: Não encontrei a nova imagem!");
+
+			System.out.println(
+					"Erro: Não encontrei a nova imagem!");
 		}
 	}
 }
