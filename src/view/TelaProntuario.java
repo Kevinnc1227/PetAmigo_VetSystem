@@ -26,7 +26,6 @@ public class TelaProntuario extends JFrame {
 	private JPanel contentPane;
 
 	private JTextField txtIdAnimal;
-	private JTextField txtUltimaVacina;
 
 	private JTextArea txtHistorico;
 	private JTextArea txtObservacoes;
@@ -80,42 +79,35 @@ public class TelaProntuario extends JFrame {
 
 		spHistorico.setBounds(140, 100, 300, 80);
 		contentPane.add(spHistorico);
-
-		JLabel lblVacina = new JLabel("Última Vacina:");
-		lblVacina.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblVacina.setBounds(30, 200, 100, 20);
-		contentPane.add(lblVacina);
-		txtUltimaVacina = new JTextField();
-		txtUltimaVacina.setBounds(140, 200, 300, 25);
-		contentPane.add(txtUltimaVacina);
 		
 		JLabel lblObservacoes = new JLabel("Observações:");
 		lblObservacoes.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblObservacoes.setBounds(30, 250, 100, 20);
+		lblObservacoes.setBounds(30, 208, 100, 20);
 		contentPane.add(lblObservacoes);
 
-		txtObservacoes = new JTextArea();
+		JScrollPane spObservacoes = new JScrollPane();
 
-		JScrollPane spObservacoes = new JScrollPane(txtObservacoes);
-
-		spObservacoes.setBounds(140, 250, 300, 80);
+		spObservacoes.setBounds(140, 208, 300, 80);
 		contentPane.add(spObservacoes);
+		
+				txtObservacoes = new JTextArea();
+				spObservacoes.setViewportView(txtObservacoes);
 
 		btnSalvar = new JButton("Salvar");
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnSalvar.setBounds(125, 401, 120, 30);
+		btnSalvar.setBounds(110, 382, 120, 30);
 		contentPane.add(btnSalvar);
 		btnLocalizar = new JButton("Localizar");
 		btnLocalizar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnLocalizar.setBounds(320, 401, 120, 30);
+		btnLocalizar.setBounds(272, 382, 120, 30);
 		contentPane.add(btnLocalizar);
 		
 		txtPeso = new JTextField();
-		txtPeso.setBounds(140, 358, 120, 25);
+		txtPeso.setBounds(140, 323, 120, 25);
 		contentPane.add(txtPeso);
 		JLabel lblPeso = new JLabel("Peso:");
 		lblPeso.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblPeso.setBounds(30, 359, 82, 20);
+		lblPeso.setBounds(30, 324, 82, 20);
 		contentPane.add(lblPeso);
 
 		btnSalvar.addActionListener(new ActionListener() {
@@ -145,7 +137,6 @@ public class TelaProntuario extends JFrame {
 		            animal2.setId(idAnimal);
 		            prontuario.setAnimal(animal2);
 		            prontuario.setHistorico(txtHistorico.getText());
-		            prontuario.setUltimaVacina(txtUltimaVacina.getText());
 		            prontuario.setObservacoes(txtObservacoes.getText());
 		            prontuario.setPeso(Float.parseFloat(txtPeso.getText()));
 
@@ -156,7 +147,6 @@ public class TelaProntuario extends JFrame {
 		            JOptionPane.showMessageDialog(null, mensagem);
 		            txtIdAnimal.setText("");
 		            txtHistorico.setText("");
-		            txtUltimaVacina.setText("");
 		            txtObservacoes.setText("");
 		            txtPeso.setText("");
 		            txtIdAnimal.requestFocus();
@@ -185,13 +175,11 @@ public class TelaProntuario extends JFrame {
 		            dao.setProntuario(prontuario);
 		            if (dao.localizar()) {
 		                txtHistorico.setText(prontuario.getHistorico());
-		                txtUltimaVacina.setText(prontuario.getUltimaVacina());
 		                txtObservacoes.setText(prontuario.getObservacoes());
 		                txtPeso.setText(String.valueOf(prontuario.getPeso()));
 		            } else {
 		                JOptionPane.showMessageDialog(null, "Nenhum prontuário encontrado para o ID " + idAnimal);
 		                txtHistorico.setText("");
-		                txtUltimaVacina.setText("");
 		                txtObservacoes.setText("");
 		                txtPeso.setText("");  
 		            }
