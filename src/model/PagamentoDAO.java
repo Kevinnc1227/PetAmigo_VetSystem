@@ -1,3 +1,4 @@
+// Autor: Lucas
 package model;
 
 import java.sql.PreparedStatement;
@@ -18,6 +19,10 @@ public class PagamentoDAO implements OperacaoBD {
 	}
 
 	public boolean localizar() {
+		if (pagamento == null) {
+			this.msg = "O objeto pagamento está nulo.";
+			return false;
+		}
 		this.sql = "SELECT * FROM pagamento WHERE valorTotal = ?";
 
 		if (!bd.getConnection()) {
@@ -44,18 +49,25 @@ public class PagamentoDAO implements OperacaoBD {
 			this.msg = "Erro ao localizar pagamento: " + e.getMessage();
 			return false;
 		} finally {
+			if (this.resultSet != null) {
+				try { this.resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
+			if (this.statement != null) {
+				try { this.statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
 			bd.close();
-
 		}
 	}
 
 	public String atualizar(TipoOperacaoBD operacao) {
+		if (pagamento == null) {
+			return "O objeto pagamento está nulo.";
+		}
 		if (!bd.getConnection()) {
 			return "Falha ao conectar ao banco de dados.";
 		}
 
 		try {
-
 			if (operacao == TipoOperacaoBD.INCLUSAO) {
 				this.sql = "INSERT INTO pagamento (valorTotal, status) VALUES (?, ?)";
 				this.statement = bd.connection.prepareStatement(this.sql);
@@ -63,18 +75,14 @@ public class PagamentoDAO implements OperacaoBD {
 				this.statement.setString(2, pagamento.getStatus().name());
 				this.statement.executeUpdate();
 				this.msg = "Pagamento incluído com sucesso!";
-			}
-
-			else if (operacao == TipoOperacaoBD.ALTERACAO) {
+			} else if (operacao == TipoOperacaoBD.ALTERACAO) {
 				this.sql = "UPDATE pagamento SET status = ? WHERE valorTotal = ?";
 				this.statement = bd.connection.prepareStatement(this.sql);
 				this.statement.setString(1, pagamento.getStatus().name());
 				this.statement.setFloat(2, pagamento.getValorTotal());
 				this.statement.executeUpdate();
 				this.msg = "Pagamento alterado com sucesso!";
-			}
-
-			else if (operacao == TipoOperacaoBD.EXCLUSAO) {
+			} else if (operacao == TipoOperacaoBD.EXCLUSAO) {
 				this.sql = "DELETE FROM pagamento WHERE valorTotal = ?";
 				this.statement = bd.connection.prepareStatement(this.sql);
 				this.statement.setFloat(1, pagamento.getValorTotal());
@@ -83,10 +91,12 @@ public class PagamentoDAO implements OperacaoBD {
 			} else {
 				this.msg = "Operação inválida.";
 			}
-
 		} catch (SQLException e) {
 			this.msg = "Erro na operação " + operacao + ": " + e.getMessage();
 		} finally {
+			if (this.statement != null) {
+				try { this.statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
 			bd.close();
 		}
 

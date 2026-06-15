@@ -1,3 +1,4 @@
+// Autor: Lucas
 package model;
 
 public class Data {

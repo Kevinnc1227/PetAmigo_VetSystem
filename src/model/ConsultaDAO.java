@@ -1,3 +1,4 @@
+// Autor: Lucas
 package model;
 
 import java.sql.PreparedStatement;
@@ -20,8 +21,8 @@ public class ConsultaDAO implements OperacaoBD {
 	}
 
 	public boolean localizar() {
-		// Ajustado para os nomes das colunas do banco (idAnimal)
-		this.sql = "SELECT * FROM Consulta WHERE data_consulta = ? AND hora_consulta = ? AND idAnimal = ?";
+
+		this.sql = "SELECT * FROM consulta WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
 
 		if (!bd.getConnection()) {
 			this.msg = "Falha ao conectar ao banco de dados.";
@@ -47,6 +48,20 @@ public class ConsultaDAO implements OperacaoBD {
 			this.msg = "Erro ao localizar consulta: " + e.getMessage();
 			return false;
 		} finally {
+			if (this.resultSet != null) {
+				try {
+					this.resultSet.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (this.statement != null) {
+				try {
+					this.statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 			bd.close();
 		}
 	}
@@ -98,6 +113,13 @@ public class ConsultaDAO implements OperacaoBD {
 		} catch (SQLException e) {
 			this.msg = "Erro na operação " + operacao + ": " + e.getMessage();
 		} finally {
+			if (this.statement != null) {
+				try {
+					this.statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 			bd.close();
 		}
 
@@ -118,12 +140,9 @@ public class ConsultaDAO implements OperacaoBD {
 
 	public List<Consulta> listarConsultas() {
 		List<Consulta> lista = new ArrayList<>();
-
-		// SQL totalmente mapeado para a estrutura correta do banco de dados
-		this.sql = "SELECT c.data_consulta, c.hora_consulta, c.idAnimal, a.nome AS animal_nome, c.crmvVeterinario, v.nome AS vet_nome, c.valor "
-				+ "FROM Consulta c " + "INNER JOIN Animal a ON c.idAnimal = a.id "
-				+ "INNER JOIN Veterinario v ON c.crmvVeterinario = v.crmv";
-
+		this.sql = "SELECT c.data_consulta, c.hora_consulta, c.animal_id, a.nome AS animal_nome, c.veterinario_crmv, v.nome AS vet_nome, c.valor "
+				+ "FROM consulta c " + "INNER JOIN Animal a ON c.animal_id = a.id "
+				+ "INNER JOIN veterinario v ON c.veterinario_crmv = v.crmv";
 		if (!bd.getConnection()) {
 			this.msg = "Falha ao conectar ao banco de dados.";
 			return lista;
@@ -144,12 +163,20 @@ public class ConsultaDAO implements OperacaoBD {
 
 				// Tratamento e conversão da Data vinda do MySQL (Formato padrão: AAAA-MM-DD)
 				String dataStr = this.resultSet.getString("data_consulta");
-				if (dataStr != null && dataStr.contains("-")) {
-					String[] partes = dataStr.split("-");
-					if (partes.length == 3) {
-						// Banco retorna [Ano, Mes, Dia] -> Classe Data espera (Dia, Mes, Ano)
-						c.setData(new Data(Integer.parseInt(partes[2]), Integer.parseInt(partes[1]),
-								Integer.parseInt(partes[0])));
+				if (dataStr != null) {
+					if (dataStr.contains("/")) {
+						String[] partes = dataStr.split("/");
+						if (partes.length == 3) {
+							c.setData(new Data(Integer.parseInt(partes[0]), Integer.parseInt(partes[1]),
+									Integer.parseInt(partes[2])));
+						}
+					} else if (dataStr.contains("-")) {
+						String[] partes = dataStr.split("-");
+						if (partes.length == 3) {
+							// MySQL DATE is YYYY-MM-DD
+							c.setData(new Data(Integer.parseInt(partes[2]), Integer.parseInt(partes[1]),
+									Integer.parseInt(partes[0])));
+						}
 					}
 				}
 
@@ -176,6 +203,18 @@ public class ConsultaDAO implements OperacaoBD {
 			this.msg = "Erro ao listar consultas: " + e.getMessage();
 			System.out.println(this.msg);
 		} finally {
+			if (this.resultSet != null) {
+				try {
+					this.resultSet.close();
+				} catch (SQLException e) {
+				}
+			}
+			if (this.statement != null) {
+				try {
+					this.statement.close();
+				} catch (SQLException e) {
+				}
+			}
 			bd.close();
 		}
 

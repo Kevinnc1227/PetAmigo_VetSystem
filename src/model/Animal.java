@@ -1,35 +1,36 @@
+// Autor: Leonardo
 package model;
 
 public class Animal {
 	private int id;
 	private String nome;
 	private TipoAnimal especie;
-	private float peso;
 	private Prontuario prontuario;
+	private Cliente cliente;
 
 	public Animal() {
-		this.prontuario = new Prontuario();
+		this.cliente = new Cliente();
+		this.prontuario = null;
 	}
 
-	public Animal(int id, String nome, TipoAnimal especie, float peso) {
+	public Animal(int id, String nome, TipoAnimal especie) {
 		this.setId(id);
 		this.setNome(nome);
 		this.setEspecie(especie);
-		this.setPeso(peso);
-		this.prontuario = new Prontuario();
+		this.cliente = new Cliente();
 	}
 
-	public Animal(String nome, TipoAnimal especie, float peso) {
+	public Animal(String nome, TipoAnimal especie) {
 		this.setNome(nome);
 		this.setEspecie(especie);
-		this.setPeso(peso);
-		this.prontuario = new Prontuario();
+		this.cliente = new Cliente();
+		
 	}
 
 	public Animal(String nome, String especie) {
 		this.setNome(nome);
 		this.setEspecie(TipoAnimal.valueOf(especie.toUpperCase()));
-		this.prontuario = new Prontuario();
+		this.cliente = new Cliente();
 	}
 
 	public int getId() {
@@ -56,14 +57,6 @@ public class Animal {
 		this.especie = especie;
 	}
 
-	public float getPeso() {
-		return this.peso;
-	}
-
-	public void setPeso(float peso) {
-		this.peso = peso;
-	}
-
 	public Prontuario getProntuario() {
 		return this.prontuario;
 	}
@@ -72,9 +65,21 @@ public class Animal {
 		this.prontuario = prontuario;
 	}
 
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
 	@Override
 	public String toString() {
-		return "Animal:\n" + "Id = " + id + "\n" + "Nome = " + nome + "\n" + "Especie = " + especie + "\n" + "Peso = "
-				+ peso;
+	    return "Animal [id=" + id +
+	           ", nome=" + nome +
+	           ", especie=" + especie +
+	           ", dono=" +
+	           (cliente != null ? cliente.getNome() : "Sem dono") +
+	           "]";
 	}
 }

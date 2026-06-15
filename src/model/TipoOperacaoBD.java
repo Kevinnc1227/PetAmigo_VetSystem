@@ -1,8 +1,8 @@
+// Autor:Lucas
 package model;
 
 public enum TipoOperacaoBD {
-	INCLUSAO,
-	ALTERACAO,
-	ATUALIZAR,
-	EXCLUSAO
+    INCLUSAO,
+    ALTERACAO,
+    EXCLUSAO
 }

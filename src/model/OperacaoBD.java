@@ -1,10 +1,17 @@
+// Autor: Kevin
 package model;
 
 public interface OperacaoBD {
-	/**
-	 * @param operacao O tipo de operação a ser realizada (INCLUSAO, ALTERACAO,
-	 *                 EXCLUSAO)
-	 * @return Uma String com a mensagem de sucesso ou erro da operação
-	 */
-	String atualizar(TipoOperacaoBD operacao);
+    /**
+     * Executa a operação de atualização (INCLUSAO, ALTERACAO, EXCLUSAO).
+     * @param operacao Tipo de operação a ser realizada.
+     * @return Mensagem de sucesso ou erro.
+     */
+    String atualizar(TipoOperacaoBD operacao);
+
+    /**
+     * Procura o registro no banco de dados.
+     * @return true se encontrado, false caso contrário.
+     */
+    boolean localizar();
 }

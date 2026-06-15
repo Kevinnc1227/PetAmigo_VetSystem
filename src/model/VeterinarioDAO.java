@@ -1,8 +1,11 @@
+// Autor: Kevin
 package model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VeterinarioDAO implements OperacaoBD {
     private BD bd;
@@ -30,6 +33,10 @@ public class VeterinarioDAO implements OperacaoBD {
 
     // Método para buscar um veterinário no banco de dados usando o CRMV como chave.
     public boolean localizar() {
+        if (veterinario == null || veterinario.getCrmv() == null || veterinario.getCrmv().trim().isEmpty()) {
+            msg = "CRMV do veterinário não informado.";
+            return false;
+        }
         sql = "SELECT * FROM veterinario WHERE crmv = ?";
         if (!bd.getConnection()) {
             msg = "Falha ao conectar ao banco de dados.";
@@ -47,11 +54,8 @@ public class VeterinarioDAO implements OperacaoBD {
                 veterinario.setEmail(resultSet.getString("email"));
                 veterinario.setEspecialidade(resultSet.getString("especialidade"));
                 
-                String endStr = resultSet.getString("endereco");
-                veterinario.setEndereco(Endereco.parse(endStr));
-                
-                String telStr = resultSet.getString("telefone");
-                veterinario.setTelefone(Telefone.parse(telStr));
+                veterinario.setEndereco(resultSet.getString("endereco"));
+                veterinario.setTelefone(resultSet.getString("telefone"));
                 
                 return true;
             }
@@ -61,6 +65,12 @@ public class VeterinarioDAO implements OperacaoBD {
             msg = "Erro ao localizar veterinário: " + erro.getMessage();
             return false;
         } finally {
+            if (resultSet != null) {
+                try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
     }
@@ -81,8 +91,8 @@ public class VeterinarioDAO implements OperacaoBD {
                 statement.setString(1, veterinario.getCrmv());
                 statement.setString(2, veterinario.getNome());
                 statement.setString(3, veterinario.getEmail());
-                statement.setString(4, veterinario.getEndereco() != null ? veterinario.getEndereco().toString() : "");
-                statement.setString(5, veterinario.getTelefone() != null ? veterinario.getTelefone().toString() : "");
+                statement.setString(4, veterinario.getEndereco() != null ? veterinario.getEndereco() : "");
+                statement.setString(5, veterinario.getTelefone() != null ? veterinario.getTelefone() : "");
                 statement.setString(6, veterinario.getEspecialidade());
 
             // Aqui faz a ALTERAÇÃO: Atualiza os dados de um veterinário que já existe.
@@ -92,8 +102,8 @@ public class VeterinarioDAO implements OperacaoBD {
 
                 statement.setString(1, veterinario.getNome());
                 statement.setString(2, veterinario.getEmail());
-                statement.setString(3, veterinario.getEndereco() != null ? veterinario.getEndereco().toString() : "");
-                statement.setString(4, veterinario.getTelefone() != null ? veterinario.getTelefone().toString() : "");
+                statement.setString(3, veterinario.getEndereco() != null ? veterinario.getEndereco() : "");
+                statement.setString(4, veterinario.getTelefone() != null ? veterinario.getTelefone() : "");
                 statement.setString(5, veterinario.getEspecialidade());
                 statement.setString(6, veterinario.getCrmv());
 
@@ -111,9 +121,45 @@ public class VeterinarioDAO implements OperacaoBD {
         } catch (SQLException erro) {
             msg = "Falha na operação - " + erro.toString();
         } finally {
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
 
         return msg;
+    }
+
+    public List<Veterinario> listarVeterinarios() {
+        List<Veterinario> lista = new ArrayList<Veterinario>();
+        String sqlListar = "SELECT * FROM veterinario ORDER BY nome";
+        if (!bd.getConnection()) {
+            return lista;
+        }
+        try {
+            statement = bd.connection.prepareStatement(sqlListar);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Veterinario v = new Veterinario();
+                v.setCrmv(resultSet.getString("crmv"));
+                v.setNome(resultSet.getString("nome"));
+                v.setEmail(resultSet.getString("email"));
+                v.setEndereco(resultSet.getString("endereco"));
+                v.setTelefone(resultSet.getString("telefone"));
+                v.setEspecialidade(resultSet.getString("especialidade"));
+                lista.add(v);
+            }
+        } catch (SQLException erro) {
+            msg = "Erro ao listar veterinários: " + erro.getMessage();
+        } finally {
+            if (resultSet != null) {
+                try { resultSet.close(); } catch (SQLException e) {}
+            }
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) {}
+            }
+            bd.close();
+        }
+        return lista;
     }
 }

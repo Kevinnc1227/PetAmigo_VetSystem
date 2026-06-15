@@ -1,3 +1,4 @@
+// Autor: Kevin
 package model;
 
 public class Veterinario extends Pessoa {
@@ -12,6 +13,12 @@ public class Veterinario extends Pessoa {
 
 	public Veterinario(String crmv, String especialidade) {
 		super();
+		this.crmv = crmv;
+		this.especialidade = especialidade;
+	}
+
+	public Veterinario(String crmv, String nome, String email, String endereco, String telefone, String especialidade) {
+		super(nome, email, endereco, telefone);
 		this.crmv = crmv;
 		this.especialidade = especialidade;
 	}
@@ -35,7 +42,7 @@ public class Veterinario extends Pessoa {
 	public String toString() {
 		return "Nome: " + this.getNome() + "\r\n" + "Email: " + this.getEmail() + "\r\n" + "CRMV: " + this.getCrmv()
 				+ "\r\n" + "Especialidade: " + this.getEspecialidade() + "\r\n" + "Telefone: "
-				+ (this.getTelefone() != null ? this.getTelefone().toString() : "") + "\r\n" + "Endereço: "
-				+ (this.getEndereco() != null ? this.getEndereco().toString() : "");
+				+ (this.getTelefone() != null ? this.getTelefone() : "") + "\r\n" + "Endereço: "
+				+ (this.getEndereco() != null ? this.getEndereco() : "");
 	}
 }

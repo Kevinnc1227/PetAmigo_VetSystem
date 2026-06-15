@@ -1,3 +1,4 @@
+// Autor: Kevin
 package model;
 
 import java.util.ArrayList;
@@ -19,6 +20,12 @@ public class Cliente extends Pessoa {
 		this.pets = new ArrayList<Animal>();
 	}
 
+	public Cliente(String cpf, String nome, String email, String endereco, String telefone) {
+		super(nome, email, endereco, telefone);
+		this.cpf = cpf;
+		this.pets = new ArrayList<Animal>();
+	}
+
 	public void cadastrarPet(Animal animal) {
 		if (animal != null) {
 			this.pets.add(animal);
@@ -35,8 +42,8 @@ public class Cliente extends Pessoa {
 
 	public String toString() {
 		return "Nome: " + this.getNome() + "\r\n" + "Email: " + this.getEmail() + "\r\n" + "CPF: " + this.getCpf()
-				+ "\r\n" + "Telefone: " + this.getTelefone().toString() + "\r\n" + "Endereco: "
-				+ this.getEndereco().toString();
+				+ "\r\n" + "Telefone: " + this.getTelefone() + "\r\n" + "Endereco: "
+				+ this.getEndereco();
 	}
 
 	public void setCpf(String cpf) {

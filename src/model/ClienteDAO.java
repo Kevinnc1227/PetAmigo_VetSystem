@@ -1,8 +1,11 @@
+// Autor: Kevin
 package model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClienteDAO implements OperacaoBD {
 	private BD bd;
@@ -30,6 +33,10 @@ public class ClienteDAO implements OperacaoBD {
 
 	// Método para buscar um cliente no banco de dados usando o CPF como chave.
 	public boolean localizar() {
+		if (cliente == null || cliente.getCpf() == null || cliente.getCpf().trim().isEmpty()) {
+			msg = "CPF do cliente não informado.";
+			return false;
+		}
 		sql = "SELECT * FROM cliente WHERE cpf = ?";
 		if (!bd.getConnection()) {
 			msg = "Falha ao conectar ao banco de dados.";
@@ -46,11 +53,8 @@ public class ClienteDAO implements OperacaoBD {
 				cliente.setNome(resultSet.getString("nome"));
 				cliente.setEmail(resultSet.getString("email"));
 
-				String endStr = resultSet.getString("endereco");
-				cliente.setEndereco(Endereco.parse(endStr));
-
-				String telStr = resultSet.getString("telefone");
-				cliente.setTelefone(Telefone.parse(telStr));
+				cliente.setEndereco(resultSet.getString("endereco"));
+				cliente.setTelefone(resultSet.getString("telefone"));
 
 				return true;
 			}
@@ -60,6 +64,20 @@ public class ClienteDAO implements OperacaoBD {
 			msg = "Erro ao localizar cliente: " + erro.getMessage();
 			return false;
 		} finally {
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 			bd.close();
 		}
 	}
@@ -80,8 +98,8 @@ public class ClienteDAO implements OperacaoBD {
 				statement.setString(1, cliente.getCpf());
 				statement.setString(2, cliente.getNome());
 				statement.setString(3, cliente.getEmail());
-				statement.setString(4, cliente.getEndereco() != null ? cliente.getEndereco().toString() : "");
-				statement.setString(5, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
+				statement.setString(4, cliente.getEndereco() != null ? cliente.getEndereco() : "");
+				statement.setString(5, cliente.getTelefone() != null ? cliente.getTelefone() : "");
 
 				// Aqui faz a ALTERAÇÃO: Atualiza os dados de um cliente que já existe.
 			} else if (operacao == TipoOperacaoBD.ALTERACAO) {
@@ -90,8 +108,8 @@ public class ClienteDAO implements OperacaoBD {
 
 				statement.setString(1, cliente.getNome());
 				statement.setString(2, cliente.getEmail());
-				statement.setString(3, cliente.getEndereco() != null ? cliente.getEndereco().toString() : "");
-				statement.setString(4, cliente.getTelefone() != null ? cliente.getTelefone().toString() : "");
+				statement.setString(3, cliente.getEndereco() != null ? cliente.getEndereco() : "");
+				statement.setString(4, cliente.getTelefone() != null ? cliente.getTelefone() : "");
 				statement.setString(5, cliente.getCpf());
 
 				// Aqui faz a EXCLUSÃO: Apaga o cliente do banco de dados usando o CPF.
@@ -108,9 +126,54 @@ public class ClienteDAO implements OperacaoBD {
 		} catch (SQLException erro) {
 			msg = "Falha na operação - " + erro.toString();
 		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 			bd.close();
 		}
 
 		return msg;
+	}
+
+	public List<Cliente> listarClientes() {
+		List<Cliente> lista = new ArrayList<Cliente>();
+		String sqlListar = "SELECT * FROM cliente ORDER BY nome";
+		if (!bd.getConnection()) {
+			return lista;
+		}
+		try {
+			statement = bd.connection.prepareStatement(sqlListar);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				Cliente c = new Cliente();
+				c.setCpf(resultSet.getString("cpf"));
+				c.setNome(resultSet.getString("nome"));
+				c.setEmail(resultSet.getString("email"));
+				c.setEndereco(resultSet.getString("endereco"));
+				c.setTelefone(resultSet.getString("telefone"));
+				lista.add(c);
+			}
+		} catch (SQLException erro) {
+			msg = "Erro ao listar clientes: " + erro.getMessage();
+		} finally {
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+				}
+			}
+			bd.close();
+		}
+		return lista;
 	}
 }

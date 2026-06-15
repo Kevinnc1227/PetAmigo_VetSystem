@@ -1,4 +1,4 @@
-
+// Autor: Leonardo
 package view;
 
 import java.awt.EventQueue;
@@ -9,8 +9,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class TelaPrincipal extends JFrame {
 
@@ -21,14 +19,12 @@ public class TelaPrincipal extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaPrincipal frame = new TelaPrincipal();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				TelaPrincipal frame = new TelaPrincipal();
+				frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -52,29 +48,23 @@ public class TelaPrincipal extends JFrame {
 		menuBar.add(mnCadastro);
 
 		JMenuItem miAnimal = new JMenuItem("Animal");
-		miAnimal.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TelaCadastroAnimal telaCadastAnimal = new TelaCadastroAnimal();
-				telaCadastAnimal.setVisible(true);
-			}
+		miAnimal.addActionListener(e -> {
+			TelaCadastroAnimal telaCadastAnimal = new TelaCadastroAnimal(this, true);
+			telaCadastAnimal.setVisible(true);
 		});
 		mnCadastro.add(miAnimal);
 
 		JMenuItem miCliente = new JMenuItem("Cliente");
-		miCliente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TelaCadastroCliente telaCadastCliente = new TelaCadastroCliente();
-				telaCadastCliente.setVisible(true);
-			}
+		miCliente.addActionListener(e -> {
+			TelaCadastroCliente telaCadastCliente = new TelaCadastroCliente(this, true);
+			telaCadastCliente.setVisible(true);
 		});
 		mnCadastro.add(miCliente);
 
 		JMenuItem miVeterinario = new JMenuItem("Veterinário");
-		miVeterinario.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TelaCadastroVeterinario telaCadastVet = new TelaCadastroVeterinario();
-				telaCadastVet.setVisible(true);
-			}
+		miVeterinario.addActionListener(e -> {
+			TelaCadastroVeterinario telaCadastVet = new TelaCadastroVeterinario(this, true);
+			telaCadastVet.setVisible(true);
 		});
 		mnCadastro.add(miVeterinario);
 
@@ -82,46 +72,33 @@ public class TelaPrincipal extends JFrame {
 		menuBar.add(mnConsulta);
 
 		JMenuItem miAgendarConsulta = new JMenuItem("Agendar Consulta");
-		miAgendarConsulta.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TelaAgendamentoConsulta telaAgConsulta = new TelaAgendamentoConsulta();
-				telaAgConsulta.setVisible(true);
-			}
+		miAgendarConsulta.addActionListener(e -> {
+			TelaAgendamentoConsulta telaAgConsulta = new TelaAgendamentoConsulta(this, true);
+			telaAgConsulta.setVisible(true);
 		});
-		mnConsulta.add(miAgendarConsulta);
-
 		mnConsulta.add(miAgendarConsulta);
 
 		JMenuItem miConsultarAgendamentos = new JMenuItem("Consultar Agendamentos");
-		miConsultarAgendamentos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TelaConsultaAgendamentos telaConsulta = new TelaConsultaAgendamentos();
-				telaConsulta.setVisible(true);
-			}
+		miConsultarAgendamentos.addActionListener(e -> {
+			TelaConsultaAgendamentos telaConsulta = new TelaConsultaAgendamentos(this, true);
+			telaConsulta.setVisible(true);
 		});
 		mnConsulta.add(miConsultarAgendamentos);
-		//
+
 		JMenu mnAtendimento = new JMenu("Atendimento");
 		menuBar.add(mnAtendimento);
 
 		JMenuItem miProntuario = new JMenuItem("Prontuário");
-		miProntuario.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TelaProntuario telaProntuario = new TelaProntuario();
-				telaProntuario.setVisible(true);
-			}
+		miProntuario.addActionListener(e -> {
+			TelaProntuario telaProntuario = new TelaProntuario(this, true);
+			telaProntuario.setVisible(true);
 		});
 		mnAtendimento.add(miProntuario);
 
-		//
 		JMenu mnAjuda = new JMenu("Ajuda");
 		menuBar.add(mnAjuda);
 		JMenuItem miSobre = new JMenuItem("Sobre");
-		miSobre.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "PetAmigo \nSistema de gestão veterinária");
-			}
-		});
+		miSobre.addActionListener(e -> JOptionPane.showMessageDialog(null, "PetAmigo \nSistema de gestão veterinária"));
 		mnAjuda.add(miSobre);
 
 		// O caminho aponta para o pacote "Pictures" e para o nome exato da imagem
