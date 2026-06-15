@@ -1,28 +1,25 @@
+// Autor: Leonardo
 package view;
 
 import javax.swing.JOptionPane;
-
 import model.Animal;
 import model.AnimalDAO;
 import model.Cliente;
 import model.ClienteDAO;
-
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.Frame;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import model.TipoAnimal;
 import javax.swing.JTextField;
 
-public class TelaCadastroAnimal extends JFrame {
+public class TelaCadastroAnimal extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -33,22 +30,31 @@ public class TelaCadastroAnimal extends JFrame {
 	private JButton btnSalvar;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaCadastroAnimal frame = new TelaCadastroAnimal();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				TelaCadastroAnimal dialog = new TelaCadastroAnimal();
+				dialog.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
 
 	public TelaCadastroAnimal() {
+		super((Frame) null, true);
+		initGUI();
+	}
+
+	public TelaCadastroAnimal(Frame parent, boolean modal) {
+		super(parent, modal);
+		initGUI();
+	}
+
+	private void initGUI() {
 		setTitle("PetAmigo - Cadastro Animal");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 400);
+		setLocationRelativeTo(getOwner());
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -70,8 +76,6 @@ public class TelaCadastroAnimal extends JFrame {
 		txtNome.setColumns(10);
 		txtNome.setBounds(180, 74, 200, 22);
 		contentPane.add(txtNome);
-
-	
 
 		// NOVO CAMPO
 		JLabel lblCpfCliente = new JLabel("CPF do Dono");
@@ -100,76 +104,59 @@ public class TelaCadastroAnimal extends JFrame {
 		btnSalvar = new JButton("Salvar");
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSalvar.setBounds(147, 233, 120, 30);
-		btnSalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			    try {
+		btnSalvar.addActionListener(e -> {
+			try {
+				if (txtNome.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Informe o nome do animal.");
+					return;
+				}
 
-			        if (txtNome.getText().trim().isEmpty()) {
-			            JOptionPane.showMessageDialog(null, "Informe o nome do animal.");
-			            return;
-			        }
+				if (txtCpfCliente.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null,"Informe o CPF do dono.");
+					return;
+				}
 
-			        if (txtCpfCliente.getText().trim().isEmpty()) {
-			            JOptionPane.showMessageDialog(null,"Informe o CPF do dono.");
-			            return;
-			        }
+				if (cbxAnimal.getSelectedItem() == null) {
+					JOptionPane.showMessageDialog(null,"Selecione a espécie.");
+					return;
+				}
+				String nome = txtNome.getText();
+				TipoAnimal especie =(TipoAnimal) cbxAnimal.getSelectedItem();
 
-			        if (cbxAnimal.getSelectedItem() == null) {
-			            JOptionPane.showMessageDialog(null,"Selecione a espécie.");
-			            return;
-			        }
-			        String nome = txtNome.getText();
-			        TipoAnimal especie =(TipoAnimal) cbxAnimal.getSelectedItem();
+				Cliente cliente = new Cliente();
+				cliente.setCpf(txtCpfCliente.getText());
+				ClienteDAO clienteDAO = new ClienteDAO();
+				clienteDAO.setCliente(cliente);
 
-			        
-			        Cliente cliente = new Cliente();
-			        cliente.setCpf(txtCpfCliente.getText());
-			        ClienteDAO clienteDAO = new ClienteDAO();
-			        clienteDAO.setCliente(cliente);
+				if (!clienteDAO.localizar()) {
+					JOptionPane.showMessageDialog(null, "Cliente não encontrado.");
+					return;
+				}
+				cliente = clienteDAO.getCliente();
+				Animal animal = new Animal(nome, especie);
+				animal.setCliente(cliente);
+				AnimalDAO dao = new AnimalDAO();
+				dao.setAnimal(animal);
 
-			        if (!clienteDAO.localizar()) {
-			            JOptionPane.showMessageDialog(
-			                    null, "Cliente não encontrado."
-			            );
-			            return;
-			        }
-			        cliente = clienteDAO.getCliente();
-			        Animal animal = new Animal(nome, especie);
-			        animal.setCliente(cliente);
-			        AnimalDAO dao = new AnimalDAO();
-			        dao.setAnimal(animal);
+				String mensagem = dao.atualizar(model.TipoOperacaoBD.INCLUSAO);
+				JOptionPane.showMessageDialog(null, mensagem);
+				txtNome.setText("");
+				txtCpfCliente.setText("");
+				cbxAnimal.setSelectedIndex(-1);
 
-			        String mensagem = dao.atualizar(model.TipoOperacaoBD.INCLUSAO);
-			        JOptionPane.showMessageDialog(null, mensagem);
-			        txtNome.setText("");
-			        txtCpfCliente.setText("");
-			        cbxAnimal.setSelectedIndex(-1);
-
-			    }
-
-			    catch (Exception ex) {
-			        JOptionPane.showMessageDialog(
-			                null,
-			                "Erro: " + ex.getMessage()
-			        );
-			    }
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
 			}
 		});
 		contentPane.add(btnSalvar);
 
-		java.net.URL url =
-				getClass().getResource("/Pictures/banana cat.jpg");
+		java.net.URL url = getClass().getResource("/Pictures/banana cat.jpg");
 
 		if (url != null) {
-			java.awt.Image icone =
-					java.awt.Toolkit.getDefaultToolkit()
-							.getImage(url);
+			java.awt.Image icone = java.awt.Toolkit.getDefaultToolkit().getImage(url);
 			this.setIconImage(icone);
-
 		} else {
-
-			System.out.println(
-					"Erro: Não encontrei a nova imagem!");
+			System.out.println("Erro: Não encontrei a nova imagem!");
 		}
 	}
 }

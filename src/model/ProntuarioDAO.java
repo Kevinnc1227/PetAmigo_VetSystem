@@ -1,3 +1,4 @@
+// Autor: Leonardo
 package model;
 
 import java.sql.PreparedStatement;
@@ -45,6 +46,7 @@ public class ProntuarioDAO implements OperacaoBD {
             
             if (this.resultSet.next()) {
                 prontuario.setHistorico(this.resultSet.getString("historico"));
+                prontuario.setUltimaVacina(this.resultSet.getString("ultimaVacina"));
                 prontuario.setObservacoes(this.resultSet.getString("observacoes"));
                 prontuario.setPeso(this.resultSet.getFloat("peso"));
                 return true;
@@ -58,6 +60,12 @@ public class ProntuarioDAO implements OperacaoBD {
             e.printStackTrace();
             return false;
         } finally {
+            if (this.resultSet != null) {
+                try { this.resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+            if (this.statement != null) {
+                try { this.statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
     }
@@ -72,22 +80,24 @@ public class ProntuarioDAO implements OperacaoBD {
         }
         try {
             if (operacao == TipoOperacaoBD.INCLUSAO) {
-                this.sql = "INSERT INTO Prontuario (idAnimal, historico, observacoes , peso) VALUES (?, ?, ?, ? )";
+                this.sql = "INSERT INTO Prontuario (idAnimal, historico, ultimaVacina, observacoes , peso) VALUES (?, ?, ?, ?, ?)";
                 this.statement = bd.connection.prepareStatement(sql);
                 this.statement.setInt(1, prontuario.getAnimal().getId());
                 this.statement.setString(2, prontuario.getHistorico());
-                this.statement.setString(3, prontuario.getObservacoes());
-                this.statement.setFloat(4, prontuario.getPeso());
+                this.statement.setString(3, prontuario.getUltimaVacina());
+                this.statement.setString(4, prontuario.getObservacoes());
+                this.statement.setFloat(5, prontuario.getPeso());
                 this.statement.executeUpdate();
                 this.msg = "Prontuário incluído com sucesso!";
 
             } else if (operacao == TipoOperacaoBD.ALTERACAO) {
-                this.sql = "UPDATE Prontuario SET historico=?, observacoes=? , peso=? WHERE idAnimal=?";
+                this.sql = "UPDATE Prontuario SET historico=?, ultimaVacina=?, observacoes=? , peso=? WHERE idAnimal=?";
                 this.statement = bd.connection.prepareStatement(this.sql);
                 this.statement.setString(1, prontuario.getHistorico());
-                this.statement.setString(2, prontuario.getObservacoes());
-                this.statement.setFloat(3, prontuario.getPeso());
-                this.statement.setInt(4, prontuario.getAnimal().getId());
+                this.statement.setString(2, prontuario.getUltimaVacina());
+                this.statement.setString(3, prontuario.getObservacoes());
+                this.statement.setFloat(4, prontuario.getPeso());
+                this.statement.setInt(5, prontuario.getAnimal().getId());
                 this.statement.executeUpdate();
                 this.msg = "Prontuário alterado com sucesso!";
                 
@@ -105,6 +115,9 @@ public class ProntuarioDAO implements OperacaoBD {
             this.msg = "Erro na operação: " + e.getMessage();
             e.printStackTrace();
         } finally {
+            if (this.statement != null) {
+                try { this.statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
         return this.msg;

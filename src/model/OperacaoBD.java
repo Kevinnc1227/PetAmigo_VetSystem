@@ -1,3 +1,4 @@
+// Autor: Kevin
 package model;
 
 public interface OperacaoBD {

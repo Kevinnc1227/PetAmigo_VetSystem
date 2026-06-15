@@ -1,24 +1,21 @@
+// Autor: Kevin
 package view;
 
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.Frame;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import model.BD;
 import model.Veterinario;
 import model.VeterinarioDAO;
 import model.TipoOperacaoBD;
 
-public class TelaCadastroVeterinario extends JFrame {
+public class TelaCadastroVeterinario extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -34,25 +31,35 @@ public class TelaCadastroVeterinario extends JFrame {
 	 * Inicializa a aplicação (Método Main para testes isolados da tela).
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaCadastroVeterinario frame = new TelaCadastroVeterinario();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				TelaCadastroVeterinario dialog = new TelaCadastroVeterinario();
+				dialog.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
 
-	/**
-	 * Cria e configura o Frame (Construtor).
-	 */
 	public TelaCadastroVeterinario() {
+		super((Frame) null, true);
+		initGUI();
+	}
+
+	public TelaCadastroVeterinario(Frame parent, boolean modal) {
+		super(parent, modal);
+		initGUI();
+	}
+
+	/**
+	 * Cria e configura o Dialog.
+	 */
+	private void initGUI() {
 		setTitle("PetAmigo - Cadastro de Veterinários");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 380);
+		setLocationRelativeTo(getOwner());
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -125,41 +132,38 @@ public class TelaCadastroVeterinario extends JFrame {
 		btnSalvar.setBounds(150, 270, 120, 30);
 		contentPane.add(btnSalvar);
 
-		btnSalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnSalvar.addActionListener(e -> {
+			// 1. Etapa de Validação: Nome e CRMV são obrigatórios
+			if (txtNome.getText().trim().isEmpty() || txtCrmv.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Nome e CRMV são obrigatórios!", "Aviso",
+						JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 
-				// 1. Etapa de Validação: Nome e CRMV são obrigatórios
-				if (txtNome.getText().trim().isEmpty() || txtCrmv.getText().trim().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Nome e CRMV são obrigatórios!", "Aviso",
-							JOptionPane.WARNING_MESSAGE);
-					return;
-				}
+			// 2. Etapa de Captura: Coleta as Strings dos campos e monta o Modelo
+			Veterinario veterinario = new Veterinario();
+			veterinario.setNome(txtNome.getText());
+			veterinario.setCrmv(txtCrmv.getText());
+			veterinario.setEmail(txtEmail.getText());
+			veterinario.setEndereco(txtEndereco.getText());
+			veterinario.setTelefone(txtTelefone.getText());
 
-				// 2. Etapa de Captura: Coleta as Strings dos campos e monta o Modelo
-				Veterinario veterinario = new Veterinario();
-				veterinario.setNome(txtNome.getText());
-				veterinario.setCrmv(txtCrmv.getText());
-				veterinario.setEmail(txtEmail.getText());
-				veterinario.setEndereco(txtEndereco.getText());
-				veterinario.setTelefone(txtTelefone.getText());
+			// 3. Persistência: Instancia o DAO com conexão autogerenciada
+			VeterinarioDAO veterinarioDao = new VeterinarioDAO();
+			veterinarioDao.setVeterinario(veterinario);
 
-				// 3. Persistência: Instancia o DAO com conexão autogerenciada
-				VeterinarioDAO veterinarioDao = new VeterinarioDAO();
-				veterinarioDao.setVeterinario(veterinario);
+			// Dispara a query através da estrutura Enum
+			String mensagemRetorno = veterinarioDao.atualizar(TipoOperacaoBD.INCLUSAO);
 
-				// Dispara a query através da estrutura Enum
-				String mensagemRetorno = veterinarioDao.atualizar(TipoOperacaoBD.INCLUSAO);
+			// 4. Veredito: Exibe o JOptionPane de retorno para o usuário
+			JOptionPane.showMessageDialog(null, mensagemRetorno, "Resultado", JOptionPane.INFORMATION_MESSAGE);
 
-				// 4. Veredito: Exibe o JOptionPane de retorno para o usuário
-				JOptionPane.showMessageDialog(null, mensagemRetorno, "Resultado", JOptionPane.INFORMATION_MESSAGE);
-
-				// Limpa os campos se gravou perfeitamente
-				if (mensagemRetorno.contains("sucesso")) {
-					limparCampos();
-				}
+			// Limpa os campos se gravou perfeitamente
+			if (mensagemRetorno.contains("sucesso")) {
+				limparCampos();
 			}
 		});
-		// É só trocar o final pelo nome da nova foto (ex: "foto_cliente.png")
+
 		java.net.URL url = getClass().getResource("/Pictures/download (1).jpg");
 
 		if (url != null) {
@@ -180,5 +184,4 @@ public class TelaCadastroVeterinario extends JFrame {
 		txtEndereco.setText("");
 		txtTelefone.setText("");
 	}
-
 }

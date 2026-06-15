@@ -1,3 +1,4 @@
+// Autor: Lucas
 package model;
 
 import java.sql.Connection;
@@ -6,7 +7,6 @@ import java.sql.SQLException;
 
 public class BD {
 	public Connection connection = null;
-	// private final String DRIVER = "com.mysql.jdbc.Driver";
 	final String DRIVER = "com.mysql.cj.jdbc.Driver";
 	private final String DBNAME = "PetAmigo_VetSystem";
 	private final String URL = "jdbc:mysql://localhost:3306/" + DBNAME;
@@ -14,7 +14,7 @@ public class BD {
 	private final String SENHA = "";
 
 	/**
-	 * metodo que faz conexao com o banco de dados retorna true se houve sucesso, ou
+	 * Metodo que faz conexao com o banco de dados retorna true se houve sucesso, ou
 	 * false em caso negativo
 	 */
 	public boolean getConnection() {
@@ -34,10 +34,12 @@ public class BD {
 
 	public void close() {
 		try {
-			connection.close();
-			System.out.println("Desconectou");
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+				System.out.println("Desconectou");
+			}
 		} catch (SQLException erro) {
-			System.out.println("Falha ao conectar " + erro.toString());
+			System.out.println("Falha ao fechar conexao " + erro.toString());
 		}
 	}
 }
