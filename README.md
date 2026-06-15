@@ -10,9 +10,9 @@ O projeto foi dividido de forma descentralizada entre os membros da equipe, conf
 
 | Cor | Membro | Responsabilidade |
 |-----|--------|-----------------|
-| 🔵 **Azul** | Kevin | **Infraestrutura** — `Pessoa`, `Cliente`, `Veterinario`, `Endereco`, `Telefone` + DAOs + GUIs |
-| 🟢 **Verde** | Leonardo | **Domínio e Exceções** — `Animal`, `Prontuario`, `TipoAnimal`, `CustomizeException` + DAOs + GUIs |
-| 🟡 **Amarelo** | Gabriel Lucas | **Operações e Financeiro** — `Consulta`, `Pagamento`, `Data`, `Hora`, `StatusPagamento` + DAOs + GUIs |
+| 🔵 **Azul** | Kevin | **Infraestrutura** — `Pessoa`, `Cliente`, `ClienteDAO`, `Veterinario`, `VeterinarioDAO`, `Endereco`, `Telefone`, `TelaCadastroCliente`, `TelaCadastroVeterinario` |
+| 🟢 **Verde** | Leonardo | **Domínio** — `Animal`, `AnimalDAO`, `Prontuario`, `ProntuarioDAO`, `TipoAnimal`, `TelaCadastroAnimal`, `TelaProntuario` |
+| 🟡 **Amarelo** | Gabriel Lucas | **Operações e Financeiro** — `Consulta`, `ConsultaDAO`, `Pagamento`, `PagamentoDAO`, `Data`, `Hora`, `StatusPagamento`, `TelaAgendamentoConsulta`, `TelaConsultaAgendamentos` |
 
 > **Importante:** Cada trecho de código possui comentário de autoria (`// Autor: [Nome]`) e os commits foram feitos individualmente nas branches de cada membro.
 
