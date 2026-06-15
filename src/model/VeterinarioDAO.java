@@ -1,8 +1,11 @@
+// Autor: Kevin
 package model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VeterinarioDAO implements OperacaoBD {
     private BD bd;
@@ -62,6 +65,12 @@ public class VeterinarioDAO implements OperacaoBD {
             msg = "Erro ao localizar veterinário: " + erro.getMessage();
             return false;
         } finally {
+            if (resultSet != null) {
+                try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
     }
@@ -112,14 +121,17 @@ public class VeterinarioDAO implements OperacaoBD {
         } catch (SQLException erro) {
             msg = "Falha na operação - " + erro.toString();
         } finally {
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
 
         return msg;
     }
 
-    public java.util.List<Veterinario> listarVeterinarios() {
-        java.util.List<Veterinario> lista = new java.util.ArrayList<Veterinario>();
+    public List<Veterinario> listarVeterinarios() {
+        List<Veterinario> lista = new ArrayList<Veterinario>();
         String sqlListar = "SELECT * FROM veterinario ORDER BY nome";
         if (!bd.getConnection()) {
             return lista;
@@ -140,6 +152,12 @@ public class VeterinarioDAO implements OperacaoBD {
         } catch (SQLException erro) {
             msg = "Erro ao listar veterinários: " + erro.getMessage();
         } finally {
+            if (resultSet != null) {
+                try { resultSet.close(); } catch (SQLException e) {}
+            }
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) {}
+            }
             bd.close();
         }
         return lista;

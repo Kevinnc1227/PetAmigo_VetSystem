@@ -1,8 +1,11 @@
+// Autor: Kevin
 package model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClienteDAO implements OperacaoBD {
     private BD bd;
@@ -61,6 +64,12 @@ public class ClienteDAO implements OperacaoBD {
             msg = "Erro ao localizar cliente: " + erro.getMessage();
             return false;
         } finally {
+            if (resultSet != null) {
+                try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
     }
@@ -108,14 +117,17 @@ public class ClienteDAO implements OperacaoBD {
         } catch (SQLException erro) {
             msg = "Falha na operação - " + erro.toString();
         } finally {
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
         
         return msg;
     }
 
-    public java.util.List<Cliente> listarClientes() {
-        java.util.List<Cliente> lista = new java.util.ArrayList<Cliente>();
+    public List<Cliente> listarClientes() {
+        List<Cliente> lista = new ArrayList<Cliente>();
         String sqlListar = "SELECT * FROM cliente ORDER BY nome";
         if (!bd.getConnection()) {
             return lista;
@@ -135,6 +147,12 @@ public class ClienteDAO implements OperacaoBD {
         } catch (SQLException erro) {
             msg = "Erro ao listar clientes: " + erro.getMessage();
         } finally {
+            if (resultSet != null) {
+                try { resultSet.close(); } catch (SQLException e) {}
+            }
+            if (statement != null) {
+                try { statement.close(); } catch (SQLException e) {}
+            }
             bd.close();
         }
         return lista;

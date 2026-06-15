@@ -1,3 +1,4 @@
+// Autor: Leonardo
 package model;
 
 public enum TipoAnimal {

@@ -1,3 +1,4 @@
+// Autor: Leonardo
 package model;
 
 import java.sql.PreparedStatement;
@@ -59,6 +60,12 @@ public class ProntuarioDAO implements OperacaoBD {
             e.printStackTrace();
             return false;
         } finally {
+            if (this.resultSet != null) {
+                try { this.resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+            if (this.statement != null) {
+                try { this.statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
     }
@@ -73,7 +80,7 @@ public class ProntuarioDAO implements OperacaoBD {
         }
         try {
             if (operacao == TipoOperacaoBD.INCLUSAO) {
-                this.sql = "INSERT INTO Prontuario (idAnimal, historico, ultimaVacina, observacoes , peso) VALUES (?, ?, ?, ? , ?)";
+                this.sql = "INSERT INTO Prontuario (idAnimal, historico, ultimaVacina, observacoes , peso) VALUES (?, ?, ?, ?, ?)";
                 this.statement = bd.connection.prepareStatement(sql);
                 this.statement.setInt(1, prontuario.getAnimal().getId());
                 this.statement.setString(2, prontuario.getHistorico());
@@ -108,6 +115,9 @@ public class ProntuarioDAO implements OperacaoBD {
             this.msg = "Erro na operação: " + e.getMessage();
             e.printStackTrace();
         } finally {
+            if (this.statement != null) {
+                try { this.statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
             bd.close();
         }
         return this.msg;

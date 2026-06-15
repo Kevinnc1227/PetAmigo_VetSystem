@@ -51,45 +51,49 @@ O diagrama foi elaborado no [draw.io](https://app.diagrams.net/) e se encontra n
 PetAmigo_VetSystem/
 │
 ├── src/
-│   └── petamigo/
-│       ├── model/          # Classes de domínio (entidades)
-│       │   ├── Pessoa.java
-│       │   ├── Cliente.java
-│       │   ├── Veterinario.java
-│       │   ├── Endereco.java
-│       │   ├── Telefone.java
-│       │   ├── Animal.java
-│       │   ├── Prontuario.java
-│       │   ├── TipoAnimal.java
-│       │   ├── Consulta.java
-│       │   ├── Pagamento.java
-│       │   ├── Data.java
-│       │   ├── Hora.java
-│       │   └── StatusPagamento.java
-│       │
-│       ├── dao/            # Acesso ao banco de dados (JDBC)
-│       │   ├── ConexaoBD.java
-│       │   ├── ClienteDAO.java
-│       │   ├── VeterinarioDAO.java
-│       │   ├── AnimalDAO.java
-│       │   └── ConsultaDAO.java
-│       │
-│       ├── view/           # Interfaces gráficas (Swing)
-│       │   ├── TelaPrincipal.java
-│       │   ├── PanelCliente.java
-│       │   ├── PanelVeterinario.java
-│       │   ├── PanelAnimal.java
-│       │   └── PanelConsulta.java
-│       │
-│       └── exception/
-│           └── CustomizeException.java
+│   ├── model/          # Classes de domínio e DAOs (JDBC)
+│   │   ├── Pessoa.java
+│   │   ├── Cliente.java
+│   │   ├── ClienteDAO.java
+│   │   ├── Veterinario.java
+│   │   ├── VeterinarioDAO.java
+│   │   ├── Endereco.java
+│   │   ├── Telefone.java
+│   │   ├── Animal.java
+│   │   ├── AnimalDAO.java
+│   │   ├── Prontuario.java
+│   │   ├── ProntuarioDAO.java
+│   │   ├── TipoAnimal.java
+│   │   ├── Consulta.java
+│   │   ├── ConsultaDAO.java
+│   │   ├── Pagamento.java
+│   │   ├── PagamentoDAO.java
+│   │   ├── Data.java
+│   │   ├── Hora.java
+│   │   ├── StatusPagamento.java
+│   │   ├── BD.java
+│   │   ├── OperacaoBD.java
+│   │   └── TipoOperacaoBD.java
+│   │
+│   └── view/           # Interfaces gráficas (Swing)
+│       ├── Main.java
+│       ├── TelaPrincipal.java
+│       ├── TelaCadastroCliente.java
+│       ├── TelaCadastroAnimal.java
+│       ├── TelaCadastroVeterinario.java
+│       ├── TelaAgendamentoConsulta.java
+│       ├── TelaConsultaAgendamentos.java
+│       └── TelaProntuario.java
+│
+├── lib/
+│   └── mysql-connector-j-8.0.33.jar
 │
 ├── docs/
-│   ├── diagrama_classes_petamigo.drawio
-│   ├── diagrama_classes_petamigo.png
 │   ├── script_db.sql       # Criação das tabelas
 │   └── script_dados.sql    # Dados iniciais de teste
 │
+├── Diagrama_De_Classes.drawio
+├── Diagrama_De_Classes.png
 └── README.md
 ```
 
@@ -101,13 +105,13 @@ PetAmigo_VetSystem/
 - Java 8 (JDK 8+)
 - MySQL Server rodando localmente
 - Eclipse IDE 2025-03
-- Conector JDBC MySQL (`mysql-connector-j-*.jar`) no Build Path
+- Conector JDBC MySQL (`lib/mysql-connector-j-8.0.33.jar`) no Build Path
 
 ### Passo a passo
 
 **1. Clone o repositório:**
 ```bash
-git clone https://github.com/SEU_USUARIO/PetAmigo_VetSystem.git
+git clone https://github.com/Kevinnc1227/PetAmigo_VetSystem.git
 ```
 
 **2. Configure o banco de dados:**
@@ -115,7 +119,7 @@ git clone https://github.com/SEU_USUARIO/PetAmigo_VetSystem.git
 Abra o MySQL e execute os scripts na ordem:
 ```bash
 mysql -u root -p < docs/script_db.sql
-mysql -u root -p db_petamigo < docs/script_dados.sql
+mysql -u root -p PetAmigo_VetSystem < docs/script_dados.sql
 ```
 
 **3. Importe no Eclipse:**
@@ -125,19 +129,19 @@ File → Import → General → Existing Projects into Workspace
 
 **4. Adicione o driver MySQL ao Build Path:**
 ```
-Clique direito no projeto → Build Path → Add External JARs → selecione o mysql-connector-j-*.jar
+Clique direito no projeto → Build Path → Configure Build Path → Libraries → Add JARs... → selecione lib/mysql-connector-j-8.0.33.jar
 ```
 
-**5. Ajuste as credenciais do banco** em `src/petamigo/dao/ConexaoBD.java`:
+**5. Ajuste as credenciais do banco** em `src/model/BD.java`:
 ```java
-private static final String URL    = "jdbc:mysql://localhost:3306/db_petamigo";
-private static final String USUARIO = "root";
-private static final String SENHA   = "sua_senha_aqui";
+private final String URL   = "jdbc:mysql://localhost:3306/PetAmigo_VetSystem";
+private final String LOGIN = "root";
+private final String SENHA = "sua_senha_aqui";
 ```
 
 **6. Execute a classe principal:**
 ```
-Run → petamigo.view.TelaPrincipal
+Run → view.Main
 ```
 
 ---

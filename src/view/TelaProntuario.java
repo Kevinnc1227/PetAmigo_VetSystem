@@ -1,12 +1,11 @@
+// Autor: Leonardo
 package view;
 
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.Frame;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,19 +13,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
 import model.Animal;
 import model.Prontuario;
 import model.ProntuarioDAO;
 
-public class TelaProntuario extends JFrame {
+public class TelaProntuario extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
 
 	private JTextField txtIdAnimal;
-	private JTextField txtUltimaVacina;
 
 	private JTextArea txtHistorico;
 	private JTextArea txtObservacoes;
@@ -34,30 +31,40 @@ public class TelaProntuario extends JFrame {
 	private JButton btnSalvar;
 	private JButton btnLocalizar;
 	private JTextField txtPeso;
+	private JTextField txtUltimaVacina;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaProntuario frame = new TelaProntuario();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				TelaProntuario dialog = new TelaProntuario();
+				dialog.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
 
 	public TelaProntuario() {
+		super((Frame) null, true);
+		initGUI();
+	}
 
+	public TelaProntuario(Frame parent, boolean modal) {
+		super(parent, modal);
+		initGUI();
+	}
+
+	private void initGUI() {
 		setTitle("PetAmigo - Prontuário");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 550, 500);
+		setLocationRelativeTo(getOwner());
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
 		JLabel lblTitulo = new JLabel("Cadastro de Prontuário");
 		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblTitulo.setBounds(160, 10, 250, 25);
@@ -80,129 +87,123 @@ public class TelaProntuario extends JFrame {
 
 		spHistorico.setBounds(140, 100, 300, 80);
 		contentPane.add(spHistorico);
-
-		JLabel lblVacina = new JLabel("Última Vacina:");
-		lblVacina.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblVacina.setBounds(30, 200, 100, 20);
-		contentPane.add(lblVacina);
+		
+		JLabel lblUltimaVacina = new JLabel("Última Vacina:");
+		lblUltimaVacina.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblUltimaVacina.setBounds(30, 200, 100, 20);
+		contentPane.add(lblUltimaVacina);
 		txtUltimaVacina = new JTextField();
 		txtUltimaVacina.setBounds(140, 200, 300, 25);
 		contentPane.add(txtUltimaVacina);
-		
+
 		JLabel lblObservacoes = new JLabel("Observações:");
 		lblObservacoes.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblObservacoes.setBounds(30, 250, 100, 20);
+		lblObservacoes.setBounds(30, 240, 100, 20);
 		contentPane.add(lblObservacoes);
-
 		txtObservacoes = new JTextArea();
-
 		JScrollPane spObservacoes = new JScrollPane(txtObservacoes);
-
-		spObservacoes.setBounds(140, 250, 300, 80);
+		spObservacoes.setBounds(140, 240, 300, 80);
 		contentPane.add(spObservacoes);
 
 		btnSalvar = new JButton("Salvar");
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnSalvar.setBounds(125, 401, 120, 30);
+		btnSalvar.setBounds(110, 382, 120, 30);
 		contentPane.add(btnSalvar);
+		
 		btnLocalizar = new JButton("Localizar");
 		btnLocalizar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnLocalizar.setBounds(320, 401, 120, 30);
+		btnLocalizar.setBounds(272, 382, 120, 30);
 		contentPane.add(btnLocalizar);
 		
 		txtPeso = new JTextField();
-		txtPeso.setBounds(140, 358, 120, 25);
+		txtPeso.setBounds(140, 335, 120, 25);
 		contentPane.add(txtPeso);
+		
 		JLabel lblPeso = new JLabel("Peso:");
 		lblPeso.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblPeso.setBounds(30, 359, 82, 20);
+		lblPeso.setBounds(30, 336, 82, 20);
 		contentPane.add(lblPeso);
 
-		btnSalvar.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            if (txtIdAnimal.getText().trim().isEmpty()) {
-		                JOptionPane.showMessageDialog(null, "Por favor, informe o ID do Animal.");
-		                return;
-		            }
-		            int idAnimal = Integer.parseInt(txtIdAnimal.getText().trim());
+		btnSalvar.addActionListener(e -> {
+			try {
+				if (txtIdAnimal.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Por favor, informe o ID do Animal.");
+					return;
+				}
+				int idAnimal = Integer.parseInt(txtIdAnimal.getText().trim());
 
-		            Prontuario verifProntuario = new Prontuario();
-		            Animal animal = new Animal();
-		            animal.setId(idAnimal);
+				Prontuario verifProntuario = new Prontuario();
+				Animal animal = new Animal();
+				animal.setId(idAnimal);
 
-		            verifProntuario.setAnimal(animal);
-		            ProntuarioDAO daoVerificar = new ProntuarioDAO();
-		            daoVerificar.setProntuario(verifProntuario);
-		            boolean existe = daoVerificar.localizar();
-		            if (txtPeso.getText().trim().isEmpty()) {
-		                JOptionPane.showMessageDialog(null, "Informe o peso.");
-		                return;
-		            }
+				verifProntuario.setAnimal(animal);
+				ProntuarioDAO daoVerificar = new ProntuarioDAO();
+				daoVerificar.setProntuario(verifProntuario);
+				boolean existe = daoVerificar.localizar();
+				if (txtPeso.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Informe o peso.");
+					return;
+				}
 
-		            Prontuario prontuario = new Prontuario();
-		            Animal animal2 = new Animal();
-		            animal2.setId(idAnimal);
-		            prontuario.setAnimal(animal2);
-		            prontuario.setHistorico(txtHistorico.getText());
-		            prontuario.setUltimaVacina(txtUltimaVacina.getText());
-		            prontuario.setObservacoes(txtObservacoes.getText());
-		            prontuario.setPeso(Float.parseFloat(txtPeso.getText()));
+				Prontuario prontuario = new Prontuario();
+				Animal animal2 = new Animal();
+				animal2.setId(idAnimal);
+				prontuario.setAnimal(animal2);
+				prontuario.setHistorico(txtHistorico.getText());
+				prontuario.setUltimaVacina(txtUltimaVacina.getText());
+				prontuario.setObservacoes(txtObservacoes.getText());
+				prontuario.setPeso(Float.parseFloat(txtPeso.getText()));
 
-		            ProntuarioDAO daoSalvar = new ProntuarioDAO();
-		            daoSalvar.setProntuario(prontuario);
+				ProntuarioDAO daoSalvar = new ProntuarioDAO();
+				daoSalvar.setProntuario(prontuario);
 
-		            String mensagem = daoSalvar.atualizar(existe ? model.TipoOperacaoBD.ALTERACAO : model.TipoOperacaoBD.INCLUSAO);
-		            JOptionPane.showMessageDialog(null, mensagem);
-		            txtIdAnimal.setText("");
-		            txtHistorico.setText("");
-		            txtUltimaVacina.setText("");
-		            txtObservacoes.setText("");
-		            txtPeso.setText("");
-		            txtIdAnimal.requestFocus();
-		        } catch (NumberFormatException ex) {
-		            JOptionPane.showMessageDialog(null, " ID do animal ou peso inválido.");
-		        } catch (Exception ex) {
-		            JOptionPane.showMessageDialog(null, "Erro na tela: " + ex.getMessage());
-		        }
-		    }
+				String mensagem = daoSalvar.atualizar(existe ? model.TipoOperacaoBD.ALTERACAO : model.TipoOperacaoBD.INCLUSAO);
+				JOptionPane.showMessageDialog(null, mensagem);
+				txtIdAnimal.setText("");
+				txtHistorico.setText("");
+				txtUltimaVacina.setText("");
+				txtObservacoes.setText("");
+				txtPeso.setText("");
+				txtIdAnimal.requestFocus();
+			} catch (NumberFormatException ex) {
+				JOptionPane.showMessageDialog(null, " ID do animal ou peso inválido.");
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null, "Erro na tela: " + ex.getMessage());
+			}
 		});
 
-		btnLocalizar.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            if (txtIdAnimal.getText().trim().isEmpty()) {
-		                JOptionPane.showMessageDialog(null, "Digite o ID do Animal para localizar.");
-		                return;
-		            }
+		btnLocalizar.addActionListener(e -> {
+			try {
+				if (txtIdAnimal.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Digite o ID do Animal para localizar.");
+					return;
+				}
 
-		            int idAnimal = Integer.parseInt(txtIdAnimal.getText().trim());
-		            Prontuario prontuario = new Prontuario();
-		            Animal animal = new Animal();
-		            animal.setId(idAnimal);
-		            prontuario.setAnimal(animal);
-		            ProntuarioDAO dao = new ProntuarioDAO();
-		            dao.setProntuario(prontuario);
-		            if (dao.localizar()) {
-		                txtHistorico.setText(prontuario.getHistorico());
-		                txtUltimaVacina.setText(prontuario.getUltimaVacina());
-		                txtObservacoes.setText(prontuario.getObservacoes());
-		                txtPeso.setText(String.valueOf(prontuario.getPeso()));
-		            } else {
-		                JOptionPane.showMessageDialog(null, "Nenhum prontuário encontrado para o ID " + idAnimal);
-		                txtHistorico.setText("");
-		                txtUltimaVacina.setText("");
-		                txtObservacoes.setText("");
-		                txtPeso.setText("");  
-		            }
+				int idAnimal = Integer.parseInt(txtIdAnimal.getText().trim());
+				Prontuario prontuario = new Prontuario();
+				Animal animal = new Animal();
+				animal.setId(idAnimal);
+				prontuario.setAnimal(animal);
+				ProntuarioDAO dao = new ProntuarioDAO();
+				dao.setProntuario(prontuario);
+				if (dao.localizar()) {
+					txtHistorico.setText(prontuario.getHistorico());
+					txtUltimaVacina.setText(prontuario.getUltimaVacina());
+					txtObservacoes.setText(prontuario.getObservacoes());
+					txtPeso.setText(String.valueOf(prontuario.getPeso()));
+				} else {
+					JOptionPane.showMessageDialog(null, "Nenhum prontuário encontrado para o ID " + idAnimal);
+					txtHistorico.setText("");
+					txtUltimaVacina.setText("");
+					txtObservacoes.setText("");
+					txtPeso.setText("");  
+				}
 
-		        } catch (NumberFormatException ex) {
-		            JOptionPane.showMessageDialog(null, "O ID do animal precisa ser um número inteiro.");
-		        } catch (Exception ex) {
-		            JOptionPane.showMessageDialog(null, "Erro ao localizar: " + ex.getMessage());
-		        }
-		    }
+			} catch (NumberFormatException ex) {
+				JOptionPane.showMessageDialog(null, "O ID do animal precisa ser um número inteiro.");
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null, "Erro ao localizar: " + ex.getMessage());
+			}
 		});
-		
 	}
 }

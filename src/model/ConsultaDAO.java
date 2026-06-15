@@ -1,8 +1,10 @@
+// Autor: Lucas
 package model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsultaDAO implements OperacaoBD {
@@ -19,7 +21,6 @@ public class ConsultaDAO implements OperacaoBD {
 	}
 
 	public boolean localizar() {
-
 		this.sql = "SELECT * FROM consulta WHERE data_consulta = ? AND hora_consulta = ? AND animal_id = ?";
 
 		if (!bd.getConnection()) {
@@ -36,7 +37,6 @@ public class ConsultaDAO implements OperacaoBD {
 			this.resultSet = this.statement.executeQuery();
 
 			if (this.resultSet.next()) {
-				// Se achou, você pode preencher o valor e os objetos relacionados se necessário
 				consulta.setValor(this.resultSet.getFloat("valor"));
 				return true;
 			} else {
@@ -47,6 +47,12 @@ public class ConsultaDAO implements OperacaoBD {
 			this.msg = "Erro ao localizar consulta: " + e.getMessage();
 			return false;
 		} finally {
+			if (this.resultSet != null) {
+				try { this.resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
+			if (this.statement != null) {
+				try { this.statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
 			bd.close();
 		}
 	}
@@ -97,6 +103,9 @@ public class ConsultaDAO implements OperacaoBD {
 		} catch (SQLException e) {
 			this.msg = "Erro na operação " + operacao + ": " + e.getMessage();
 		} finally {
+			if (this.statement != null) {
+				try { this.statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+			}
 			bd.close();
 		}
 
@@ -116,7 +125,7 @@ public class ConsultaDAO implements OperacaoBD {
 	}
 
 	public List<Consulta> listarConsultas() {
-		List<Consulta> lista = new java.util.ArrayList<>();
+		List<Consulta> lista = new ArrayList<>();
 		this.sql = "SELECT c.data_consulta, c.hora_consulta, c.animal_id, a.nome AS animal_nome, c.veterinario_crmv, v.nome AS vet_nome, c.valor " +
 		           "FROM consulta c " +
 		           "INNER JOIN Animal a ON c.animal_id = a.id " +
@@ -135,17 +144,25 @@ public class ConsultaDAO implements OperacaoBD {
 				Consulta c = new Consulta();
 
 				String dataStr = this.resultSet.getString("data_consulta");
-				if (dataStr != null && dataStr.contains("/")) {
-					String[] partes = dataStr.split("/");
-					if (partes.length == 3) {
-						c.setData(new Data(Integer.parseInt(partes[0]), Integer.parseInt(partes[1]), Integer.parseInt(partes[2])));
+				if (dataStr != null) {
+					if (dataStr.contains("/")) {
+						String[] partes = dataStr.split("/");
+						if (partes.length == 3) {
+							c.setData(new Data(Integer.parseInt(partes[0]), Integer.parseInt(partes[1]), Integer.parseInt(partes[2])));
+						}
+					} else if (dataStr.contains("-")) {
+						String[] partes = dataStr.split("-");
+						if (partes.length == 3) {
+							// MySQL DATE is YYYY-MM-DD
+							c.setData(new Data(Integer.parseInt(partes[2]), Integer.parseInt(partes[1]), Integer.parseInt(partes[0])));
+						}
 					}
 				}
 
 				String horaStr = this.resultSet.getString("hora_consulta");
 				if (horaStr != null && horaStr.contains(":")) {
 					String[] partes = horaStr.split(":");
-					if (partes.length == 2) {
+					if (partes.length >= 2) {
 						c.setHora(new Hora(Integer.parseInt(partes[0]), Integer.parseInt(partes[1])));
 					}
 				}
@@ -163,6 +180,12 @@ public class ConsultaDAO implements OperacaoBD {
 		} catch (SQLException e) {
 			this.msg = "Erro ao listar consultas: " + e.getMessage();
 		} finally {
+			if (this.resultSet != null) {
+				try { this.resultSet.close(); } catch (SQLException e) {}
+			}
+			if (this.statement != null) {
+				try { this.statement.close(); } catch (SQLException e) {}
+			}
 			bd.close();
 		}
 

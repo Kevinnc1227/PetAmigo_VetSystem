@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1808" dy="1671" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -834,6 +834,9 @@
             <mxPoint x="-70" y="-630" as="sourcePoint" />
             <mxPoint x="90" y="-630" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="atribuicao-autoria-av2" parent="WIyWlLk6GJQsqaUBKTNV-1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#333333;strokeColor=#d3d3d3;fillColor=#f9f9f9;spacing=10;strokeWidth=1;" value="&lt;b&gt;AV2 - DIVISAO DE RESPONSABILIDADES&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#0000ff&quot;&gt;Cliente Kevin&lt;/font&gt;: Infraestrutura (Pessoa, Cliente, Veterinario, Endereco, Telefone, BD) + DAOs + GUIs&lt;br&gt;&lt;font color=&quot;#00aa00&quot;&gt;Cliente Leonardo&lt;/font&gt;: Dominio e Excecoes (Animal, Prontuario, TipoAnimal, CustomizeException) + DAOs + GUIs&lt;br&gt;&lt;font color=&quot;#ffbb00&quot;&gt;Cliente Gabriel Lucas&lt;/font&gt;: Operacoes e Financeiro (Consulta, Pagamento, Data, Hora, StatusPagamento) + DAOs + GUIs&lt;br&gt;&lt;br&gt;&lt;b&gt;Fontes Externas (Regra 10):&lt;/b&gt;&lt;br&gt;- Livro: Java 8 Ensino Didatico (Sergio Furgeri)&lt;br&gt;- MySQL Connector/J JDBC Driver" vertex="1">
+          <mxGeometry height="160" width="600" x="40" y="710" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

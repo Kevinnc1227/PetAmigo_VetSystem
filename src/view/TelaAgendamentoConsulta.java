@@ -1,23 +1,21 @@
-
+// Autor: Lucas
 package view;
 
 import java.awt.Font;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Frame;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
 import model.ConsultaDAO;
 import model.ClienteDAO;
 import javax.swing.JOptionPane;
 
-public class TelaAgendamentoConsulta extends JFrame {
+public class TelaAgendamentoConsulta extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -40,29 +38,37 @@ public class TelaAgendamentoConsulta extends JFrame {
 	private java.util.List<model.Veterinario> listaVeterinarios;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaAgendamentoConsulta frame = new TelaAgendamentoConsulta();
-					frame.setVisible(true);
-					frame.setLocationRelativeTo(null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				TelaAgendamentoConsulta dialog = new TelaAgendamentoConsulta();
+				dialog.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
 
 	public TelaAgendamentoConsulta() {
+		super((Frame) null, true);
+		initGUI();
+	}
 
+	public TelaAgendamentoConsulta(Frame parent, boolean modal) {
+		super(parent, modal);
+		initGUI();
+	}
+
+	private void initGUI() {
 		consultaDAO = new ConsultaDAO();
 		clienteDAO = new ClienteDAO();
 		veterinarioDAO = new model.VeterinarioDAO();
 		animalDAO = new model.AnimalDAO();
 
 		setTitle("PetAmigo - Agendamento de Consultas");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 420);
+		setLocationRelativeTo(getOwner());
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -78,7 +84,7 @@ public class TelaAgendamentoConsulta extends JFrame {
 		lblCliente.setBounds(30, 60, 150, 20);
 		contentPane.add(lblCliente);
 
-		cbxCliente = new JComboBox<String>();
+		cbxCliente = new JComboBox<>();
 		cbxCliente.setBounds(180, 60, 200, 22);
 		contentPane.add(cbxCliente);
 
@@ -87,7 +93,7 @@ public class TelaAgendamentoConsulta extends JFrame {
 		lblAnimal.setBounds(30, 100, 150, 20);
 		contentPane.add(lblAnimal);
 
-		cbxAnimal = new JComboBox<String>();
+		cbxAnimal = new JComboBox<>();
 		cbxAnimal.setBounds(180, 100, 200, 22);
 		contentPane.add(cbxAnimal);
 
@@ -96,7 +102,7 @@ public class TelaAgendamentoConsulta extends JFrame {
 		lblVeterinario.setBounds(30, 140, 150, 20);
 		contentPane.add(lblVeterinario);
 
-		cbxVeterinario = new JComboBox<String>();
+		cbxVeterinario = new JComboBox<>();
 		cbxVeterinario.setBounds(180, 140, 200, 22);
 		contentPane.add(cbxVeterinario);
 
@@ -135,11 +141,7 @@ public class TelaAgendamentoConsulta extends JFrame {
 		btnAgendar.setBounds(150, 310, 120, 30);
 		contentPane.add(btnAgendar);
 
-		btnAgendar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				agendarAtendimento();
-			}
-		});
+		btnAgendar.addActionListener(e -> agendarAtendimento());
 
 		preencherClientes();
 		preencherAnimais();

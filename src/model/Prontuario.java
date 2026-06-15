@@ -1,6 +1,5 @@
-
+// Autor: Leonardo
 package model;
-
 public class Prontuario {
 	private String historico;
 	private String ultimaVacina;
@@ -16,9 +15,17 @@ public class Prontuario {
 		this.animal = new Animal();
 	}
 
-	public Prontuario(String historico, String ultimaVacina, String observacoes, Animal animal , float peso) {
+	public Prontuario(String historico, String ultimaVacina, String observacoes, Animal animal, float peso) {
 		this.historico = historico;
 		this.ultimaVacina = ultimaVacina;
+		this.observacoes = observacoes;
+		this.animal = animal;
+		this.peso = peso;
+	}
+
+	public Prontuario(String historico, String observacoes, Animal animal, float peso) {
+		this.historico = historico;
+		this.ultimaVacina = "";
 		this.observacoes = observacoes;
 		this.animal = animal;
 		this.peso = peso;
