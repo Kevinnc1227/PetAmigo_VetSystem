@@ -20,9 +20,9 @@ O projeto foi dividido de forma descentralizada entre os membros da equipe, conf
 
 ## 📊 Diagrama UML de Classes
 
-O diagrama foi elaborado no [draw.io](https://app.diagrams.net/) e se encontra no arquivo `docs/diagrama_classes_petamigo.drawio`.
+O diagrama foi elaborado no [draw.io](https://app.diagrams.net/) e se encontra no arquivo `docs/Diagrama_De_Classes.drawio`.
 
-![Diagrama de Classes](./docs/diagrama_classes_petamigo.png)
+![Diagrama de Classes](./docs/Diagrama_De_Classes.png)
 
 ### Principais relacionamentos:
 - `Cliente` e `Veterinario` **herdam** de `Pessoa` (herança)
