@@ -151,9 +151,9 @@ Run → view.Main
 | Branch | Responsável | Conteúdo |
 |--------|-------------|----------|
 | `main` | Equipe | Código integrado e estável |
-| `feature/infraestrutura` | [Seu Nome] 🔵 | Pessoa, Cliente, Veterinario, Endereco, Telefone |
-| `feature/dominio` | Jaime Junior 🟢 | Animal, Prontuario, TipoAnimal, CustomizeException |
-| `feature/operacoes` | [Nome] 🟡 | Consulta, Pagamento, Data, Hora |
+| `feature/infraestrutura` | Kevin 🔵 | `Pessoa`, `Cliente`, `ClienteDAO`, `Veterinario`, `VeterinarioDAO`, `Endereco`, `Telefone`, `TelaCadastroCliente`, `TelaCadastroVeterinario` |
+| `feature/dominio` | Leonardo 🟢 | `Animal`, `AnimalDAO`, `Prontuario`, `ProntuarioDAO`, `TipoAnimal`, `TelaCadastroAnimal`, `TelaProntuario` |
+| `feature/operacoes` | Gabriel Lucas 🟡 | `Consulta`, `ConsultaDAO`, `Pagamento`, `PagamentoDAO`, `Data`, `Hora`, `StatusPagamento`, `TelaAgendamentoConsulta`, `TelaConsultaAgendamentos` |
 
 ---
 
