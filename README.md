@@ -26,10 +26,9 @@ O diagrama foi elaborado no [draw.io](https://app.diagrams.net/) e se encontra n
 
 ### Principais relacionamentos:
 - `Cliente` e `Veterinario` **herdam** de `Pessoa` (herança)
-- `Pessoa` **compõe** `Endereco` e `Telefone` (composição)
+- `Pessoa` possui **associação lógica** com `Endereco` e `Telefone` (armazenados como `String` no objeto, usando parses das classes auxiliares para manipulação)
 - `Cliente` **agrega** `Animal` — um cliente pode ter 0 ou mais pets (agregação `0..*`)
 - `Consulta` **associa** `Animal`, `Veterinario` e `Pagamento`
-- `Animal` lança `CustomizeException`, que **estende** `Exception`
 
 ---
 
