@@ -8,9 +8,6 @@ target/
 
 # Lixo de IDE (Configurações pessoais)
 .idea/
-.settings/
-.classpath
-.project
 .vscode/
 
 # Arquivos de Sistema
